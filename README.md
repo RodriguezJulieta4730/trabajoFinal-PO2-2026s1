@@ -1,4 +1,6 @@
 # trabajoFinal-PO2-2026s1
-integrantes: 
+Integrantes: 
 * Julieta Rodriguez
 * Micaela Lopez
+
+version de java: 21
