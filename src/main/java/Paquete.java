@@ -13,7 +13,7 @@ public class Paquete implements CatalogoDeProductos{
         listaDeProducto.add(producto2);
     }
 
-    public Paquete(Producto producto1, Producto producto2, double descuento){
+    public Paquete(CatalogoDeProductos producto1, CatalogoDeProductos producto2, double descuento){
         listaDeProducto.add(producto1);
         listaDeProducto.add(producto2);
         this.descuento=descuento;
@@ -22,9 +22,24 @@ public class Paquete implements CatalogoDeProductos{
     @Override
     public double getPrecioFinal() {
         double precioTotal= 0;
-        for(Producto p: listaDeProducto){
+        for(CatalogoDeProductos p: listaDeProducto){
             precioTotal+= p.getPrecioFinal();
         }
         return precioTotal * (1-descuento);
+    }
+
+    @Override
+    public CatalogoDeProductos compose(CatalogoDeProductos producto, double v) {
+        return null;
+    }
+
+    @Override
+    public double getPrecioBase() {
+        return 0;
+    }
+
+    @Override
+    public Paquete compose(CatalogoDeProductos producto2) {
+        return null;
     }
 }

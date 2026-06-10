@@ -1,0 +1,44 @@
+package State;
+
+public class EstadoDePedidoBorrador implements EstadoDePedido{
+    private ContextoPedido context;
+
+    public EstadoDePedidoBorrador(ContextoPedido contextoPedido) {
+        this.context = contextoPedido;
+    }
+
+    @Override
+    public void agregarProducto() {
+
+    }
+
+    @Override
+    public void sacarProducto() {
+
+    }
+
+    @Override
+    public void confirmarPedido() {
+        context.setEstado(new EstadoDePedidoConfirmado(context));
+    }
+
+    @Override
+    public void pagarPedido() {
+
+    }
+
+    @Override
+    public void enviarPedido() {
+
+    }
+
+    @Override
+    public void entregarPedido() {
+
+    }
+
+    @Override
+    public void cancelarPedido() {
+
+    }
+}

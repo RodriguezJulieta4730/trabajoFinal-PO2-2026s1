@@ -1,5 +1,8 @@
 import lombok.Getter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Getter
 public class Producto implements CatalogoDeProductos {
     private String sku;
@@ -8,15 +11,27 @@ public class Producto implements CatalogoDeProductos {
     private String categoria;
     private double precioBase;
     private double descuento = 0;
-    public Producto(String sku, String nombre, String marca, String categoria, double precioBase) {
+    private Map<String,Object> atributosExtra = new HashMap<>();
+
+    public Producto(String sku,
+                    String nombre,
+                    String marca,
+                    String categoria,
+                    double precioBase) {
         this.sku=sku;
         this.nombre=nombre;
         this.marca=marca;
         this.categoria=categoria;
         this.precioBase=precioBase;
+
     }
 
-    public Producto(String sku, String nombre, String marca, String categoria, double precioBase, double descuento) {
+    public Producto(String sku,
+                    String nombre,
+                    String marca,
+                    String categoria,
+                    double precioBase,
+                    double descuento) {
         this.sku=sku;
         this.nombre=nombre;
         this.marca=marca;
@@ -31,12 +46,20 @@ public class Producto implements CatalogoDeProductos {
     }
 
     @Override
+    public CatalogoDeProductos compose(CatalogoDeProductos producto, double v) {
+        return new Paquete(this, producto, v);
+    }
+
+    @Override
     public Paquete compose(CatalogoDeProductos producto2) {
         return new Paquete(this,producto2);
     }
 
-    @Override
-    public Paquete compose(Producto producto2,double descuento) {
-        return new Paquete(this,producto2,descuento);
+    public void setAtributoExtra(String atributoExtra, Object valor) {
+        atributosExtra.put(atributoExtra,valor);
+    }
+
+    public Object getAtributoExtra(String atributoExtra) {
+        return atributosExtra.get(atributoExtra);
     }
 }
