@@ -4,22 +4,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class Producto implements CatalogoDeProductos {
-    private String sku;
-    private String nombre;
-    private String marca;
-    private String categoria;
-    private double precioBase;
+public class Producto extends CatalogoDeProductos {
+    private final String sku;
+    private final String marca;
+    private final String categoria;
+    private final double precioBase;
     private double descuento = 0;
-    private Map<String,Object> atributosExtra = new HashMap<>();
+    private final Map<String,Object> atributosExtra = new HashMap<>();
 
     public Producto(String sku,
                     String nombre,
+                    String descripcion,
                     String marca,
                     String categoria,
                     double precioBase) {
         this.sku=sku;
         this.nombre=nombre;
+        this.descripcion=descripcion;
         this.marca=marca;
         this.categoria=categoria;
         this.precioBase=precioBase;
@@ -28,12 +29,14 @@ public class Producto implements CatalogoDeProductos {
 
     public Producto(String sku,
                     String nombre,
+                    String descripcion,
                     String marca,
                     String categoria,
                     double precioBase,
                     double descuento) {
         this.sku=sku;
         this.nombre=nombre;
+        this.descripcion=descripcion;
         this.marca=marca;
         this.categoria=categoria;
         this.precioBase=precioBase;
@@ -46,13 +49,13 @@ public class Producto implements CatalogoDeProductos {
     }
 
     @Override
-    public CatalogoDeProductos compose(CatalogoDeProductos producto, double v) {
-        return new Paquete(this, producto, v);
+    public CatalogoDeProductos compose(String nombre, String descripcion, CatalogoDeProductos producto, double descuento) {
+        return new Paquete(nombre,descripcion,this, producto, descuento);
     }
 
     @Override
-    public Paquete compose(CatalogoDeProductos producto2) {
-        return new Paquete(this,producto2);
+    public CatalogoDeProductos compose(String nombre, String descripcion,CatalogoDeProductos producto) {
+        return new Paquete(nombre,descripcion,this, producto);
     }
 
     public void setAtributoExtra(String atributoExtra, Object valor) {

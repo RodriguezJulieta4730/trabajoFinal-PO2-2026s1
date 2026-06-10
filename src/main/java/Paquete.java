@@ -4,16 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class Paquete implements CatalogoDeProductos{
+public class Paquete extends CatalogoDeProductos{
     private List<CatalogoDeProductos> listaDeProducto = new ArrayList<>();
     private double descuento=0;
 
-    public Paquete(CatalogoDeProductos producto1, CatalogoDeProductos producto2){
+    public Paquete(String nombre, String descripcion,CatalogoDeProductos producto1, CatalogoDeProductos producto2){
+        this.nombre=nombre;
+        this.descuento=descuento;
         listaDeProducto.add(producto1);
         listaDeProducto.add(producto2);
     }
 
-    public Paquete(CatalogoDeProductos producto1, CatalogoDeProductos producto2, double descuento){
+    public Paquete(String nombre, String descripcion,CatalogoDeProductos producto1, CatalogoDeProductos producto2, double descuento){
+        this.nombre=nombre;
+        this.descuento=descuento;
         listaDeProducto.add(producto1);
         listaDeProducto.add(producto2);
         this.descuento=descuento;
@@ -29,7 +33,7 @@ public class Paquete implements CatalogoDeProductos{
     }
 
     @Override
-    public CatalogoDeProductos compose(CatalogoDeProductos producto, double v) {
+    CatalogoDeProductos compose(String nombre, String descripcion, CatalogoDeProductos producto, double descuento) {
         return null;
     }
 
@@ -39,7 +43,8 @@ public class Paquete implements CatalogoDeProductos{
     }
 
     @Override
-    public Paquete compose(CatalogoDeProductos producto2) {
+    CatalogoDeProductos compose(String nombre, String descripcion, CatalogoDeProductos producto) {
         return null;
     }
+
 }
