@@ -1,23 +1,25 @@
+package Clases;
+
 import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class Producto extends CatalogoDeProductos {
+public class ProductoIndividual extends CatalogoDeProductos {
     private final String sku;
     private final String marca;
-    private final String categoria;
+    private final Categoria categoria;
     private final double precioBase;
     private double descuento = 0;
     private final Map<String,Object> atributosExtra = new HashMap<>();
 
-    public Producto(String sku,
-                    String nombre,
-                    String descripcion,
-                    String marca,
-                    String categoria,
-                    double precioBase) {
+    public ProductoIndividual(String sku,
+                              String nombre,
+                              String descripcion,
+                              String marca,
+                              Categoria categoria,
+                              double precioBase) {
         this.sku=sku;
         this.nombre=nombre;
         this.descripcion=descripcion;
@@ -27,13 +29,13 @@ public class Producto extends CatalogoDeProductos {
 
     }
 
-    public Producto(String sku,
-                    String nombre,
-                    String descripcion,
-                    String marca,
-                    String categoria,
-                    double precioBase,
-                    double descuento) {
+    public ProductoIndividual(String sku,
+                              String nombre,
+                              String descripcion,
+                              String marca,
+                              Categoria categoria,
+                              double precioBase,
+                              double descuento) {
         this.sku=sku;
         this.nombre=nombre;
         this.descripcion=descripcion;
@@ -46,16 +48,6 @@ public class Producto extends CatalogoDeProductos {
 
     public double getPrecioFinal(){
         return precioBase - precioBase*descuento;
-    }
-
-    @Override
-    public CatalogoDeProductos compose(String nombre, String descripcion, CatalogoDeProductos producto, double descuento) {
-        return new Paquete(nombre,descripcion,this, producto, descuento);
-    }
-
-    @Override
-    public CatalogoDeProductos compose(String nombre, String descripcion,CatalogoDeProductos producto) {
-        return new Paquete(nombre,descripcion,this, producto);
     }
 
     public void setAtributoExtra(String atributoExtra, Object valor) {
