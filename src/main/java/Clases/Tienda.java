@@ -26,4 +26,22 @@ public class Tienda {
             stockProductos.put(c,stockProductos.get(c)-productos.get(c));
         }
     }
+
+    public void cancelarPedido(Map<CatalogoDeProductos, Integer> productos) {
+        if(productos != null) {
+            for (CatalogoDeProductos c : productos.keySet()) {
+                stockProductos.put(c, stockProductos.get(c) + productos.get(c));
+            }
+        }
+    }
+
+    public void cancelarPedido(Pedido pedido){
+        Map<CatalogoDeProductos, Integer> productos = pedido.getProductos();
+        if(productos != null) {
+            for (CatalogoDeProductos c : productos.keySet()) {
+                stockProductos.put(c, stockProductos.get(c) + productos.get(c));
+            }
+        }
+        pedido.cancelarPedido();
+    }
 }

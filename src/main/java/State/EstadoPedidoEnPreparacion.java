@@ -6,9 +6,9 @@ import Clases.Tienda;
 
 import java.util.Map;
 
-public class EstadoDePedidoConfirmado implements EstadoDePedido {
+public class EstadoPedidoEnPreparacion implements EstadoDePedido {
     private ContextoPedido contexto;
-    public EstadoDePedidoConfirmado(ContextoPedido contexto) {
+    public EstadoPedidoEnPreparacion(ContextoPedido contexto) {
         this.contexto=contexto;
     }
 
@@ -44,18 +44,16 @@ public class EstadoDePedidoConfirmado implements EstadoDePedido {
 
     @Override
     public void cancelarPedido() {
-
+        contexto.setEstado(new EstadoDePedidoCancelado(contexto));
     }
 
     @Override
     public void cancelarPedido(Pedido pedido) {
-        pedido.getTienda().cancelarPedido(pedido.getProductos());
         contexto.setEstado(new EstadoDePedidoCancelado(contexto));
     }
 
     @Override
     public void pagado() {
-        contexto.setEstado(new EstadoPedidoEnPreparacion(contexto));
-    }
 
+    }
 }

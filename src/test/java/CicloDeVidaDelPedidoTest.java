@@ -1,6 +1,8 @@
 import Clases.*;
 import State.EstadoDePedidoBorrador;
+import State.EstadoDePedidoCancelado;
 import State.EstadoDePedidoConfirmado;
+import State.EstadoPedidoEnPreparacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -87,9 +89,19 @@ public class CicloDeVidaDelPedidoTest {
         assertThrows(RuntimeException.class,() -> cliente1.quitarProducto(producto1, 4, pedido1, tienda1));
     }
 
+    @Test
+    void test009_unClienteCancelaUnPedidoEnBorrador() {
+        tienda1.agregarStock(producto1, 4);
+        tienda1.agregarStock(producto2, 4);
+        cliente1.agregarProducto(producto1, 3, pedido1, tienda1);
+        cliente1.agregarProducto(producto2, 3, pedido1, tienda1);
+        cliente1.cancelarPedido(pedido1);
+
+        assertTrue(pedido1.getProductos().isEmpty());
+    }
 
     @Test
-    void test009_unClienteConfirmaElPedido() {
+    void test0010_unClienteConfirmaElPedido() {
         tienda1.agregarStock(producto1, 4);
         tienda1.agregarStock(producto2,4);
         cliente1.agregarProducto(producto1, 2, pedido1, tienda1);
@@ -99,5 +111,46 @@ public class CicloDeVidaDelPedidoTest {
         assertInstanceOf(EstadoDePedidoConfirmado.class, pedido1.getEstado());
         assertEquals(2, tienda1.getStockProductos().get(producto1));
         assertEquals(2, tienda1.getStockProductos().get(producto2));
+    }
+
+    @Test
+    void test0011_unClienteCancelaUnPedidoConfirmado() {
+        tienda1.agregarStock(producto1, 4);
+        tienda1.agregarStock(producto2, 4);
+        cliente1.agregarProducto(producto1, 3, pedido1, tienda1);
+        cliente1.agregarProducto(producto2, 3, pedido1, tienda1);
+        cliente1.confirmarPedido(pedido1);
+        cliente1.cancelarPedido(pedido1);
+
+        assertTrue(pedido1.getProductos().isEmpty());
+        assertEquals(4,tienda1.getStockProductos().get(producto1));
+        assertEquals(4,tienda1.getStockProductos().get(producto2));
+    }
+
+    @Test
+    void test001_unClienteConfirmaYLoPaga() {
+        tienda1.agregarStock(producto1, 4);
+        tienda1.agregarStock(producto2,4);
+        cliente1.agregarProducto(producto1, 2, pedido1, tienda1);
+        cliente1.agregarProducto(producto2, 2, pedido1, tienda1);
+        cliente1.confirmarPedido(pedido1);
+        cliente1.pagarPedido(pedido1);
+
+        assertInstanceOf(EstadoPedidoEnPreparacion.class, pedido1.getEstado());
+    }
+
+    @Test
+    void test0013_tiendaCancelaPedidoEnPreparacion() {
+        tienda1.agregarStock(producto1, 4);
+        tienda1.agregarStock(producto2,4);
+        cliente1.agregarProducto(producto1, 2, pedido1, tienda1);
+        cliente1.agregarProducto(producto2, 2, pedido1, tienda1);
+        cliente1.confirmarPedido(pedido1);
+        cliente1.pagarPedido(pedido1);
+        tienda1.cancelarPedido(pedido1);
+
+        assertInstanceOf(EstadoDePedidoCancelado.class, pedido1.getEstado());
+        assertEquals(4,tienda1.getStockProductos().get(producto1));
+        assertEquals(4,tienda1.getStockProductos().get(producto2));
     }
 }

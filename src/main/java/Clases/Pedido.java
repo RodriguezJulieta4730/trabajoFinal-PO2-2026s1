@@ -51,4 +51,14 @@ public class Pedido {
             productos.put(producto, cantidadActual - cantProducto);
         }
     }
+
+    public void cancelarPedido() {
+        contextoPedido.cancelarPedido(this);
+        productos = new HashMap();
+    }
+
+
+    public void pagado() {
+        contextoPedido.pagado();
+    }
 }

@@ -1,5 +1,11 @@
 package State;
 
+import Clases.CatalogoDeProductos;
+import Clases.Pedido;
+import Clases.Tienda;
+
+import java.util.Map;
+
 public class EstadoDePedidoBorrador implements EstadoDePedido{
     private ContextoPedido context;
 
@@ -41,4 +47,16 @@ public class EstadoDePedidoBorrador implements EstadoDePedido{
     public void cancelarPedido() {
 
     }
+
+    @Override
+    public void cancelarPedido(Pedido pedido) {
+
+    }
+
+    @Override
+    public void pagado() {
+
+    }
+
+
 }
