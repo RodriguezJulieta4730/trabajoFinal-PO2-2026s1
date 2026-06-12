@@ -25,4 +25,12 @@ public class ContextoPedido {
     public void pagado() {
         estado.pagado();
     }
+
+    public void enviado() {
+        estado.enviado();
+    }
+
+    public void pedidoEnviado() {
+        estado.pedidoEntregado();
+    }
 }

@@ -57,4 +57,14 @@ public class EstadoDePedidoCancelado implements EstadoDePedido {
     public void pagado() {
 
     }
+
+    @Override
+    public void enviado() {
+
+    }
+
+    @Override
+    public void pedidoEntregado() {
+
+    }
 }

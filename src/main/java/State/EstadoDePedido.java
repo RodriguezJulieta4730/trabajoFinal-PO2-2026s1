@@ -18,4 +18,8 @@ public interface EstadoDePedido {
     void cancelarPedido(Pedido pedido);
 
     void pagado();
+
+    void enviado();
+
+    void pedidoEntregado();
 }

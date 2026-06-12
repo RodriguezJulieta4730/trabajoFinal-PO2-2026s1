@@ -58,5 +58,15 @@ public class EstadoDePedidoBorrador implements EstadoDePedido{
 
     }
 
+    @Override
+    public void enviado() {
+
+    }
+
+    @Override
+    public void pedidoEntregado() {
+
+    }
+
 
 }

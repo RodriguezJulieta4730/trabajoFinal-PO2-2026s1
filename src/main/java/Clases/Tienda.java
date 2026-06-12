@@ -44,4 +44,20 @@ public class Tienda {
         }
         pedido.cancelarPedido();
     }
+
+    public void enviado(Pedido pedido) {
+        pedido.enviado();
+    }
+
+    public void reembolsarCostoProductos(Pedido pedido) {
+        pedido.reembolsarCostoProductos();
+    }
+
+    public void reembolsarEnvio(Pedido pedido) {
+        pedido.reembolsarEnvio();
+    }
+
+    public void entregar(Pedido pedido) {
+        pedido.entregado();
+    }
 }

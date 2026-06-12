@@ -1,14 +1,10 @@
 package State;
 
-import Clases.CatalogoDeProductos;
 import Clases.Pedido;
-import Clases.Tienda;
 
-import java.util.Map;
-
-public class EstadoPedidoEnPreparacion implements EstadoDePedido {
+public class EstadoDePedidoEnviado implements EstadoDePedido {
     private ContextoPedido contexto;
-    public EstadoPedidoEnPreparacion(ContextoPedido contexto) {
+    public EstadoDePedidoEnviado(ContextoPedido contexto) {
         this.contexto=contexto;
     }
 
@@ -44,12 +40,13 @@ public class EstadoPedidoEnPreparacion implements EstadoDePedido {
 
     @Override
     public void cancelarPedido() {
-        contexto.setEstado(new EstadoDePedidoCancelado(contexto));
+
     }
 
     @Override
     public void cancelarPedido(Pedido pedido) {
         contexto.setEstado(new EstadoDePedidoCancelado(contexto));
+        pedido.getTienda().reembolsarCostoProductos(pedido);
     }
 
     @Override
@@ -59,11 +56,11 @@ public class EstadoPedidoEnPreparacion implements EstadoDePedido {
 
     @Override
     public void enviado() {
-        contexto.setEstado(new EstadoDePedidoEnviado(contexto));
+
     }
 
     @Override
     public void pedidoEntregado() {
-
+        contexto.setEstado(new EstadoDePedidoEntregado(contexto));
     }
 }

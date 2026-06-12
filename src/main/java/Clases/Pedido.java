@@ -4,9 +4,7 @@ import State.ContextoPedido;
 import State.EstadoDePedido;
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -60,5 +58,22 @@ public class Pedido {
 
     public void pagado() {
         contextoPedido.pagado();
+    }
+
+    public void enviado() {
+        contextoPedido.enviado();
+    }
+
+    public void reembolsarCostoProductos() {
+        //deberiamos guardar en algun momento al cliente como para despues
+        //mandarle un mensaje tipo "Se ha reembolsado el costo de los productos"
+    }
+
+    public void reembolsarEnvio() {
+        //mandarle un mensaje tipo "Se ha reembolsado el costo del envio"
+    }
+
+    public void entregado() {
+        contextoPedido.pedidoEnviado();
     }
 }

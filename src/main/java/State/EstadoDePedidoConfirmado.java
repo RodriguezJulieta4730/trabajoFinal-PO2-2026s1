@@ -51,11 +51,24 @@ public class EstadoDePedidoConfirmado implements EstadoDePedido {
     public void cancelarPedido(Pedido pedido) {
         pedido.getTienda().cancelarPedido(pedido.getProductos());
         contexto.setEstado(new EstadoDePedidoCancelado(contexto));
+        pedido.getTienda().reembolsarCostoProductos(pedido);
+        pedido.getTienda().reembolsarEnvio(pedido);
+
     }
 
     @Override
     public void pagado() {
         contexto.setEstado(new EstadoPedidoEnPreparacion(contexto));
+    }
+
+    @Override
+    public void enviado() {
+
+    }
+
+    @Override
+    public void pedidoEntregado() {
+
     }
 
 }
