@@ -8,6 +8,4 @@ public abstract class CatalogoDeProductos {
     String descripcion;
 
     public abstract double getPrecioFinal();
-    abstract double getPrecioBase();
-
 }

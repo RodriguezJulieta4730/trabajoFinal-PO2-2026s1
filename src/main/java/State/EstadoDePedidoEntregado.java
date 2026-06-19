@@ -3,43 +3,9 @@ package State;
 import Clases.Pedido;
 
 public class EstadoDePedidoEntregado implements EstadoDePedido {
-    private ContextoPedido contexto;
-    public EstadoDePedidoEntregado(ContextoPedido contexto) {
-        this.contexto=contexto;
-    }
 
     @Override
-    public void agregarProducto() {
-
-    }
-
-    @Override
-    public void sacarProducto() {
-
-    }
-
-    @Override
-    public void confirmarPedido() {
-
-    }
-
-    @Override
-    public void pagarPedido() {
-
-    }
-
-    @Override
-    public void enviarPedido() {
-
-    }
-
-    @Override
-    public void entregarPedido() {
-
-    }
-
-    @Override
-    public void cancelarPedido() {
+    public void confirmarPedido(Pedido pedido) {
 
     }
 
@@ -49,17 +15,17 @@ public class EstadoDePedidoEntregado implements EstadoDePedido {
     }
 
     @Override
-    public void pagado() {
+    public void pagado(Pedido pedido) {
 
     }
 
     @Override
-    public void enviado() {
+    public void enviado(Pedido pedido) {
 
     }
 
     @Override
-    public void pedidoEntregado() {
+    public void entregado(Pedido pedido) {
 
     }
 }

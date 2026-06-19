@@ -33,11 +33,4 @@ public class Paquete extends CatalogoDeProductos{
         }
         return precioTotal * (1-descuento);
     }
-
-    @Override
-    public double getPrecioBase() {
-        return 0;
-    }
-
-
 }

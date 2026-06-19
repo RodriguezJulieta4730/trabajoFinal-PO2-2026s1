@@ -3,64 +3,31 @@ package State;
 import Clases.Pedido;
 
 public class EstadoDePedidoEnviado implements EstadoDePedido {
-    private ContextoPedido contexto;
-    public EstadoDePedidoEnviado(ContextoPedido contexto) {
-        this.contexto=contexto;
-    }
 
     @Override
-    public void agregarProducto() {
+    public void confirmarPedido(Pedido pedido) {
 
     }
 
-    @Override
-    public void sacarProducto() {
-
-    }
-
-    @Override
-    public void confirmarPedido() {
-
-    }
-
-    @Override
-    public void pagarPedido() {
-
-    }
-
-    @Override
-    public void enviarPedido() {
-
-    }
-
-    @Override
-    public void entregarPedido() {
-
-    }
-
-    @Override
-    public void cancelarPedido() {
-
-    }
 
     @Override
     public void cancelarPedido(Pedido pedido) {
-        contexto.setEstado(new EstadoDePedidoCancelado(contexto));
         pedido.getTienda().reembolsarCostoProductos(pedido);
+        pedido.setEstado(new EstadoDePedidoCancelado());
     }
 
     @Override
-    public void pagado() {
-
-    }
-
-    @Override
-    public void enviado() {
+    public void pagado(Pedido pedido) {
 
     }
 
     @Override
-    public void pedidoEntregado() {
-        contexto.setEstado(new EstadoDePedidoEntregado(contexto));
+    public void enviado(Pedido pedido) {
+
+    }
+
+    @Override
+    public void entregado(Pedido pedido) {
+        pedido.setEstado(new EstadoDePedidoEntregado());
     }
 }

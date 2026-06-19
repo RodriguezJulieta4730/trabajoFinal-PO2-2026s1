@@ -1,7 +1,7 @@
 package Clases;
 
-import State.ContextoPedido;
 import State.EstadoDePedido;
+import State.EstadoDePedidoBorrador;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -9,59 +9,66 @@ import java.util.Map;
 
 @Getter
 public class Pedido {
-    private Map<CatalogoDeProductos, Integer> productos = new HashMap();
-    private final ContextoPedido contextoPedido = new ContextoPedido();
+    Map<CatalogoDeProductos, Integer> carritoDeproductos;
+    EstadoDePedido estadoActual;
     private Tienda tienda;
 
-    public void agregarProducto(CatalogoDeProductos producto, int cantProducto, Tienda tienda) {
-        this.tienda=tienda;
+    public Pedido(Tienda tienda) {
+        this.tienda = tienda;
+        this.carritoDeproductos = new HashMap<>();
+        this.estadoActual = new EstadoDePedidoBorrador();
+    }
+
+    // Permite a los estados cambiar el estado del pedido
+    public void setEstado(EstadoDePedido nuevoEstado) {
+        this.estadoActual = nuevoEstado;
+    }
+
+    public void confirmarPedido() {
+        this.estadoActual.confirmarPedido(this);
+    }
+
+    public void cancelarPedido() {
+        this.estadoActual.cancelarPedido(this);
+    }
+
+    public void pagado() {
+        this.estadoActual.pagado(this);
+    }
+
+    public void enviado() {
+        this.estadoActual.enviado(this);
+    }
+
+    public void entregado() {
+        this.estadoActual.entregado(this);
+    }
+
+
+    public void agregarProducto(CatalogoDeProductos producto, int cantProducto) {
         if (tienda.tieneStock(producto, cantProducto)) {
-            productos.put(producto, cantProducto);
+            carritoDeproductos.put(producto, cantProducto);
         } else {
             throw new RuntimeException("No hay suficiente stock");
         }
     }
 
-    public EstadoDePedido getEstado() {
-        return contextoPedido.getEstado();
-    }
-
-    public void confirmarPedido() {
-        contextoPedido.confirmarPedido();
-        tienda.decrementarStock(productos);
-
-    }
-
-    public void quitarProducto(CatalogoDeProductos producto, int cantProducto, Tienda tienda) {
-        if (!productos.containsKey(producto)) {
+    public void quitarProducto(CatalogoDeProductos producto, int cantProducto) {
+        if (!carritoDeproductos.containsKey(producto)) {
             throw new RuntimeException("No existe ese producto en el pedido");
         }
 
-        int cantidadActual = productos.get(producto);
+        int cantidadActual = carritoDeproductos.get(producto);
 
         if (cantidadActual < cantProducto) {
             throw new RuntimeException("No hay cantidad suficiente para quitar");
         }
 
         if (cantidadActual == cantProducto) {
-            productos.remove(producto);
+            carritoDeproductos.remove(producto);
         } else {
-            productos.put(producto, cantidadActual - cantProducto);
+            carritoDeproductos.put(producto, cantidadActual - cantProducto);
         }
-    }
-
-    public void cancelarPedido() {
-        contextoPedido.cancelarPedido(this);
-        productos = new HashMap();
-    }
-
-
-    public void pagado() {
-        contextoPedido.pagado();
-    }
-
-    public void enviado() {
-        contextoPedido.enviado();
     }
 
     public void reembolsarCostoProductos() {
@@ -73,7 +80,7 @@ public class Pedido {
         //mandarle un mensaje tipo "Se ha reembolsado el costo del envio"
     }
 
-    public void entregado() {
-        contextoPedido.pedidoEnviado();
+    public void borrarCarrito() {
+        this.carritoDeproductos=new HashMap<>();
     }
 }

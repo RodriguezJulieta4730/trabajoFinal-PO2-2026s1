@@ -36,7 +36,7 @@ public class Tienda {
     }
 
     public void cancelarPedido(Pedido pedido){
-        Map<CatalogoDeProductos, Integer> productos = pedido.getProductos();
+        Map<CatalogoDeProductos, Integer> productos = pedido.getCarritoDeproductos();
         if(productos != null) {
             for (CatalogoDeProductos c : productos.keySet()) {
                 stockProductos.put(c, stockProductos.get(c) + productos.get(c));
