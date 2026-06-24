@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static Clases.Categoria.Electronica;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 public class CicloDeVidaDelPedidoTest {
     Producto producto1;
@@ -18,9 +19,9 @@ public class CicloDeVidaDelPedidoTest {
     void setUp(){
         tienda1 = new Tienda();
         pedido1 = new Pedido(tienda1);
-        producto1 = new ProductoIndividual("E0123", "Cable USB-C","una descripcion", "Samsung", Electronica, 800);
-        producto2 = new ProductoIndividual("E1235", "Funda Protector","una descripcion", "Samsung", Electronica, 1500,0.15);
-        producto3 = new ProductoIndividual("E0126", "Cable USB-C","una descripcion", "Samsung", Electronica, 800);
+        producto1 = mock(ProductoIndividual.class);
+        producto2 = mock(ProductoIndividual.class);
+        producto3 = mock(ProductoIndividual.class);
     }
 
     @Test
