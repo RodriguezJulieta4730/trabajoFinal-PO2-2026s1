@@ -1,6 +1,7 @@
 package State;
 
 import Clases.Pedido;
+import Excepciones.operacionInvalidaExeption;
 
 public class EstadoDePedidoConfirmado implements EstadoDePedido {
 
@@ -25,11 +26,13 @@ public class EstadoDePedidoConfirmado implements EstadoDePedido {
 
     @Override
     public void enviar(Pedido pedido) {
+        throw new operacionInvalidaExeption("el pedido no esta en preparacion");
 
     }
 
     @Override
     public void entregar(Pedido pedido) {
+        throw new operacionInvalidaExeption("el pedido no fue enviado");
 
     }
 

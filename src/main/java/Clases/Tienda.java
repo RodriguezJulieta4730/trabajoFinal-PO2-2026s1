@@ -1,5 +1,6 @@
 package Clases;
 
+import Excepciones.StockNegativoException;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ public class Tienda {
         if(stock>0){
             stockProductos.put(producto,stock);
         }else{
-            throw new RuntimeException("El numero debe ser positivo");
+            throw new StockNegativoException("El numero debe ser positivo");
         }
     }
 

@@ -1,5 +1,7 @@
 package Clases;
 
+import Excepciones.CantidadInsuficienteException;
+import Excepciones.NoHayProductoEnPedidoException;
 import Excepciones.NoHayStockException;
 import State.EstadoDePedido;
 import State.EstadoDePedidoBorrador;
@@ -56,13 +58,13 @@ public class Pedido {
 
     public void quitarProducto(Producto producto, int cantProducto) {
         if (!carritoDeProductos.containsKey(producto)) {
-            throw new RuntimeException("No existe ese producto en el pedido");
+            throw new NoHayProductoEnPedidoException("No existe ese producto en el pedido");
         }
 
         int cantidadActual = carritoDeProductos.get(producto);
 
         if (cantidadActual < cantProducto) {
-            throw new RuntimeException("No hay cantidad suficiente para quitar");
+            throw new CantidadInsuficienteException("No hay cantidad suficiente para quitar");
         }
 
         if (cantidadActual == cantProducto) {

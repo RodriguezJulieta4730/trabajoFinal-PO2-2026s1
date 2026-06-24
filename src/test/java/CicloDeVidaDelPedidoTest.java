@@ -1,10 +1,9 @@
 import Clases.*;
-import Excepciones.NoHayStockException;
+import Excepciones.*;
 import State.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static Clases.Categoria.Electronica;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
@@ -52,7 +51,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test004_laTiendaNoPuedeAgregarStockNegativo(){
-        assertThrows(RuntimeException.class,() -> tienda1.agregarStock(producto1,-1));
+        assertThrows(StockNegativoException.class,() -> tienda1.agregarStock(producto1,-1));
     }
 
     @Test
@@ -75,14 +74,14 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test007_seIntentaQuitarUnProductoQueNuncaSeAgregoAlPedido() {
-        assertThrows(RuntimeException.class,() -> pedido1.quitarProducto(producto1, 3));
+        assertThrows(NoHayProductoEnPedidoException.class,() -> pedido1.quitarProducto(producto1, 3));
     }
 
     @Test
     void test008_seIntentaQuitarMasCantidadesDeUnProductoQueLasQueSeAgregaronAlPedido() {
         tienda1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 3);
-        assertThrows(RuntimeException.class,() -> pedido1.quitarProducto(producto1, 4));
+        assertThrows(CantidadInsuficienteException.class,() -> pedido1.quitarProducto(producto1, 4));
     }
 
     @Test
@@ -92,7 +91,7 @@ public class CicloDeVidaDelPedidoTest {
         pedido1.agregarProducto(producto1, 3);
         pedido1.agregarProducto(producto2, 3);
         pedido1.cancelar();
-
+        assertInstanceOf(EstadoDePedidoCancelado.class, pedido1.getEstadoActual());
         assertTrue(pedido1.getCarritoDeProductos().isEmpty());
     }
 
@@ -195,5 +194,202 @@ public class CicloDeVidaDelPedidoTest {
         pedido1.entregar();
 
         assertInstanceOf(EstadoDePedidoEntregado.class, pedido1.getEstadoActual());
+    }
+
+    //EXCEPCIONES EN ESTADO: BORRADOR
+    @Test
+    void test0017_borradorNoSePuedePagar() {
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.pagar());
+    }
+
+    @Test
+    void test0018_borradorNoSePuedeEnviar() {
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.enviar());
+    }
+
+    @Test
+    void test0019_borradorNoSePuedeEntregar() {
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.entregar());
+    }
+
+    // EXCEPCIONES EN ESTADO: CONFIRMADO
+    @Test
+    void test0020_confirmadoNoSePuedeEnviar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.enviar());
+    }
+
+    @Test
+    void test0021_confirmadoNoSePuedeEntregar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.entregar());
+    }
+
+    //EXCEPCIONES EN ESTADO: EN PREPARACION
+    @Test
+    void test0022_enPreparacionNoSePuedeConfirmar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+        pedido1.pagar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.confirmar());
+    }
+
+    @Test
+    void test0023_enPreparacionNoSePuedePagar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+        pedido1.pagar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.pagar());
+    }
+
+    @Test
+    void test0024_enPreparacionNoSePuedeEntregar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+        pedido1.pagar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.entregar());
+    }
+
+    // EXCEPCIONES EN ESTADO: ENVIADO
+    @Test
+    void test0025_enviadoNoSePuedeConfirmar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+        pedido1.pagar();
+        pedido1.enviar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.confirmar());
+    }
+
+    @Test
+    void test0026_enviadoNoSePuedePagar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+        pedido1.pagar();
+        pedido1.enviar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.pagar());
+    }
+
+    @Test
+    void test0027_enviadoNoSePuedeEnviar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+        pedido1.pagar();
+        pedido1.enviar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.enviar());
+    }
+
+    //EXCEPCIONES EN ESTADO: ENTREGADO
+    @Test
+    void test0028_entregadoNoSePuedeConfirmar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+        pedido1.pagar();
+        pedido1.enviar();
+        pedido1.entregar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.confirmar());
+    }
+
+    @Test
+    void test0029_entregadoNoSePuedeCancelar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+        pedido1.pagar();
+        pedido1.enviar();
+        pedido1.entregar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.cancelar());
+    }
+
+    @Test
+    void test0030_entregadoNoSePuedePagar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+        pedido1.pagar();
+        pedido1.enviar();
+        pedido1.entregar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.pagar());
+    }
+
+    @Test
+    void test0031_entregadoNoSePuedeEnviar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+        pedido1.pagar();
+        pedido1.enviar();
+        pedido1.entregar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.enviar());
+    }
+
+    @Test
+    void test0032_entregadoNoSePuedeEntregar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+        pedido1.pagar();
+        pedido1.enviar();
+        pedido1.entregar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.entregar());
+    }
+
+    //EXCEPCIONES EN ESTADO: CANCELADO
+    @Test
+    void test0033_canceladoNoSePuedeConfirmar() {
+        pedido1.cancelar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.confirmar());
+    }
+
+    @Test
+    void test0034_canceladoNoSePuedeCancelar() {
+        pedido1.cancelar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.cancelar());
+    }
+
+    @Test
+    void test0035_canceladoNoSePuedePagar() {
+        pedido1.cancelar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.pagar());
+    }
+
+    @Test
+    void test0036_canceladoNoSePuedeEnviar() {
+        pedido1.cancelar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.enviar());
+    }
+
+    @Test
+    void test0037_canceladoNoSePuedeEntregar() {
+        pedido1.cancelar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.entregar());
     }
 }
