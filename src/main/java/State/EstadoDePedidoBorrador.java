@@ -5,29 +5,29 @@ import Clases.Pedido;
 public class EstadoDePedidoBorrador implements EstadoDePedido{
 
     @Override
-    public void confirmarPedido(Pedido pedido) {
-        pedido.getTienda().decrementarStock(pedido.getCarritoDeproductos());
+    public void confirmar(Pedido pedido) {
+        pedido.getTienda().decrementarStock(pedido.getCarritoDeProductos());
         pedido.setEstado(new EstadoDePedidoConfirmado());
     }
 
     @Override
-    public void cancelarPedido(Pedido pedido) {
-        pedido.getCarritoDeproductos().clear();
+    public void cancelar(Pedido pedido) {
+        pedido.getCarritoDeProductos().clear();
         pedido.setEstado(new EstadoDePedidoCancelado());
     }
 
     @Override
-    public void pagado(Pedido pedido) {
+    public void pagar(Pedido pedido) {
 
     }
 
     @Override
-    public void enviado(Pedido pedido) {
+    public void enviar(Pedido pedido) {
 
     }
 
     @Override
-    public void entregado(Pedido pedido) {
+    public void entregar(Pedido pedido) {
 
     }
 

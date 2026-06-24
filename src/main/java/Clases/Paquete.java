@@ -6,18 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class Paquete extends CatalogoDeProductos{
-    private List<CatalogoDeProductos> listaDeProducto = new ArrayList<>();
+public class Paquete extends Producto {
+    private List<Producto> listaDeProducto = new ArrayList<>();
     private double descuento=0;
 
-    public Paquete(String nombre, String descripcion, CatalogoDeProductos producto1, CatalogoDeProductos producto2) {
+    public Paquete(String nombre, String descripcion, Producto producto1, Producto producto2) {
         this.nombre=nombre;
         this.descripcion=descripcion;
         listaDeProducto.add(producto1);
         listaDeProducto.add(producto2);
     }
 
-    public Paquete(String nombre, String descripcion, CatalogoDeProductos producto1, CatalogoDeProductos producto2, double descuento) {
+    public Paquete(String nombre, String descripcion, Producto producto1, Producto producto2, double descuento) {
         this.nombre=nombre;
         this.descripcion=descripcion;
         listaDeProducto.add(producto1);
@@ -28,7 +28,7 @@ public class Paquete extends CatalogoDeProductos{
     @Override
     public double getPrecioFinal() {
         double precioTotal= 0;
-        for(CatalogoDeProductos p: listaDeProducto){
+        for(Producto p: listaDeProducto){
             precioTotal+= p.getPrecioFinal();
         }
         return precioTotal * (1-descuento);

@@ -5,13 +5,13 @@ import Clases.Pedido;
 public class EstadoDePedidoConfirmado implements EstadoDePedido {
 
     @Override
-    public void confirmarPedido(Pedido pedido) {
+    public void confirmar(Pedido pedido) {
 
     }
 
     @Override
-    public void cancelarPedido(Pedido pedido) {
-        pedido.getTienda().cancelarPedido(pedido.getCarritoDeproductos());
+    public void cancelar(Pedido pedido) {
+        pedido.getTienda().cancelarPedido(pedido.getCarritoDeProductos());
         pedido.getTienda().reembolsarCostoProductos(pedido);
         pedido.getTienda().reembolsarEnvio(pedido);
         pedido.borrarCarrito();
@@ -19,17 +19,17 @@ public class EstadoDePedidoConfirmado implements EstadoDePedido {
     }
 
     @Override
-    public void pagado(Pedido pedido) {
+    public void pagar(Pedido pedido) {
         pedido.setEstado(new EstadoPedidoEnPreparacion());
     }
 
     @Override
-    public void enviado(Pedido pedido) {
+    public void enviar(Pedido pedido) {
 
     }
 
     @Override
-    public void entregado(Pedido pedido) {
+    public void entregar(Pedido pedido) {
 
     }
 

@@ -5,27 +5,27 @@ import Clases.Pedido;
 public class EstadoDePedidoCancelado implements EstadoDePedido {
 
     @Override
-    public void confirmarPedido(Pedido pedido) {
+    public void confirmar(Pedido pedido) {
 
     }
 
     @Override
-    public void cancelarPedido(Pedido pedido) {
+    public void cancelar(Pedido pedido) {
 
     }
 
     @Override
-    public void pagado(Pedido pedido) {
+    public void pagar(Pedido pedido) {
 
     }
 
     @Override
-    public void enviado(Pedido pedido) {
+    public void enviar(Pedido pedido) {
 
     }
 
     @Override
-    public void entregado(Pedido pedido) {
+    public void entregar(Pedido pedido) {
 
     }
 }

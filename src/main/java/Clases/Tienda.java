@@ -7,9 +7,9 @@ import java.util.Map;
 
 @Getter
 public class Tienda {
-    private Map<CatalogoDeProductos,Integer> stockProductos = new HashMap<>();
+    private Map<Producto,Integer> stockProductos = new HashMap<>();
 
-    public void agregarStock(CatalogoDeProductos producto, int stock) {
+    public void agregarStock(Producto producto, int stock) {
         if(stock>0){
             stockProductos.put(producto,stock);
         }else{
@@ -17,36 +17,22 @@ public class Tienda {
         }
     }
 
-    public boolean tieneStock(CatalogoDeProductos producto, int cantProducto) {
-        return stockProductos.get(producto)>=cantProducto;
+    public boolean tieneStock(Producto producto, int cantProducto) {
+        return stockProductos.getOrDefault(producto,0)>=cantProducto;
     }
 
-    public void decrementarStock(Map<CatalogoDeProductos, Integer> productos) {
-        for(CatalogoDeProductos c: productos.keySet()){
+    public void decrementarStock(Map<Producto, Integer> productos) {
+        for(Producto c: productos.keySet()){
             stockProductos.put(c,stockProductos.get(c)-productos.get(c));
         }
     }
 
-    public void cancelarPedido(Map<CatalogoDeProductos, Integer> productos) {
+    public void cancelarPedido(Map<Producto, Integer> productos) {
         if(productos != null) {
-            for (CatalogoDeProductos c : productos.keySet()) {
+            for (Producto c : productos.keySet()) {
                 stockProductos.put(c, stockProductos.get(c) + productos.get(c));
             }
         }
-    }
-
-    public void cancelarPedido(Pedido pedido){
-        Map<CatalogoDeProductos, Integer> productos = pedido.getCarritoDeproductos();
-        if(productos != null) {
-            for (CatalogoDeProductos c : productos.keySet()) {
-                stockProductos.put(c, stockProductos.get(c) + productos.get(c));
-            }
-        }
-        pedido.cancelarPedido();
-    }
-
-    public void enviado(Pedido pedido) {
-        pedido.enviado();
     }
 
     public void reembolsarCostoProductos(Pedido pedido) {
@@ -58,6 +44,6 @@ public class Tienda {
     }
 
     public void entregar(Pedido pedido) {
-        pedido.entregado();
+        pedido.entregar();
     }
 }

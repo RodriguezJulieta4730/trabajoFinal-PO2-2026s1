@@ -3,7 +3,7 @@ package Clases;
 import lombok.Getter;
 
 @Getter
-public abstract class CatalogoDeProductos {
+public abstract class Producto {
     String nombre;
     String descripcion;
 

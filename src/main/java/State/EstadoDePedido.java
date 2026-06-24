@@ -3,9 +3,9 @@ package State;
 import Clases.Pedido;
 
 public interface EstadoDePedido {
-    void confirmarPedido(Pedido pedido);
-    void cancelarPedido(Pedido pedido);
-    void pagado(Pedido pedido);
-    void enviado(Pedido pedido);
-    void entregado(Pedido pedido);
+    void confirmar(Pedido pedido);
+    void cancelar(Pedido pedido);
+    void pagar(Pedido pedido);
+    void enviar(Pedido pedido);
+    void entregar(Pedido pedido);
 }

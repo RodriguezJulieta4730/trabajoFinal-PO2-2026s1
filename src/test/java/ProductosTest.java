@@ -1,4 +1,4 @@
-import Clases.CatalogoDeProductos;
+import Clases.Producto;
 import Clases.Paquete;
 import Clases.ProductoIndividual;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static Clases.Categoria.Electronica;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CatalogoDeProductosTest {
+public class ProductosTest {
     ProductoIndividual producto1;
     ProductoIndividual producto2;
     ProductoIndividual producto3;
@@ -21,7 +21,6 @@ public class CatalogoDeProductosTest {
 
     @Test
     void test001_Producto(){
-
         assertEquals("Cable USB-C", producto1.getNombre());
         assertEquals("Samsung", producto1.getMarca());
         assertEquals(Electronica, producto1.getCategoria());
@@ -40,31 +39,42 @@ public class CatalogoDeProductosTest {
 
     @Test
     void test003_PaquetoConDosProductosConDescuento(){
-        CatalogoDeProductos paquete1 = new Paquete("CableYFunda","una Descripcion",producto1,producto2,0.15);
+        Producto paquete1 = new Paquete("CableYFunda","una Descripcion",producto1,producto2,0.15);
         assertEquals(1763.75,paquete1.getPrecioFinal());
     }
 
     @Test
     void test004_PaquetoConDosProductosSinDescuento(){
-        CatalogoDeProductos paquete1 = new Paquete("CableYFunda","una Descripcion",producto1,producto2);
+        Producto paquete1 = new Paquete("CableYFunda","una Descripcion",producto1,producto2);
         assertEquals(2075,paquete1.getPrecioFinal());
     }
 
     @Test
     void test005_PaquetoConUnProductoYUnPaquete(){
-        CatalogoDeProductos paquete1 = new Paquete("CableYFunda","una Descripcion",producto3,producto2,0.15);
-        CatalogoDeProductos paquete2 = new Paquete("DosCablesYFunda","una Descripcion",producto1,paquete1, 0.15);
+        Producto paquete1 = new Paquete("CableYFunda","una Descripcion",producto3,producto2,0.15);
+        Producto paquete2 = new Paquete("DosCablesYFunda","una Descripcion",producto1,paquete1, 0.15);
         assertEquals(2179.1875,paquete2.getPrecioFinal());
     }
 
     @Test
-    void test006_ProductoConAtributosExtra(){
+    void test006_PaquetoConUnProductoYUnPaquete(){
+        Producto paquete1 = new Paquete("CableYFunda","una Descripcion",producto3,producto2);
+        Producto paquete2 = new Paquete("DosCablesYFunda","una Descripcion",producto1,paquete1, 0.10);
+        assertEquals(2587.5,paquete2.getPrecioFinal());
+    }
+
+
+    //AGREGAR TEST PAQUETES CON PAQUETES SIN DESCUENTOS
+    //Y REVISAR TODOS
+
+    @Test
+    void test007_ProductoConAtributosExtra(){
         producto1.setAtributoExtra("Alto", 1.9);
         assertEquals(1.9, producto1.getAtributoExtra("Alto"));
     }
 
     @Test
-    void test007_ProductoConAtributosExtras(){
+    void test008_ProductoConAtributosExtras(){
         producto1.setAtributoExtra("Alto", 1.9);
         producto1.setAtributoExtra("Ancho", 1.9);
         producto1.setAtributoExtra("Peso", 5);

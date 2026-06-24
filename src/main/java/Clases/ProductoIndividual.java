@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class ProductoIndividual extends CatalogoDeProductos {
+public class ProductoIndividual extends Producto {
     private final String sku;
     private final String marca;
     private final Categoria categoria;
