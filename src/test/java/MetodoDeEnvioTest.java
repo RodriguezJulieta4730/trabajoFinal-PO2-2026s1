@@ -1,5 +1,7 @@
 import Clases.Pedido;
 import Clases.Tienda;
+import Excepciones.PesoInvalidoException;
+import Excepciones.operacionInvalidaExeption;
 import Strategy.EnvioEstandar;
 import Strategy.EnvioExpress;
 import Strategy.MetodoDeEnvio;
@@ -8,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -16,6 +19,7 @@ public class MetodoDeEnvioTest {
     Pedido pedido2;
     Pedido pedido3;
     Pedido pedido4;
+    Pedido pedido5;
 
     Tienda tienda;
     Tienda tienda2;
@@ -47,6 +51,11 @@ public class MetodoDeEnvioTest {
         tienda2 = mock(Tienda.class);
         when(pedido4.getTienda()).thenReturn(tienda2);
         when(tienda2.tieneStockPara(pedido4)).thenReturn(false);
+
+        pedido5 = mock(Pedido.class);
+        when(pedido5.getPeso()).thenReturn(-1.0F);
+        when(pedido5.getDireccion()).thenReturn("Boedo 671");
+        when(pedido5.getMetodoDeEnvio()).thenReturn(envioEstandar);
     }
 
     @Test
@@ -73,5 +82,10 @@ public class MetodoDeEnvioTest {
     void test0004_retiroEnSucursalSinStock() {
         assertEquals(0, retiroEnSucursal.calcularCosto(pedido4));
         assertEquals(3, retiroEnSucursal.estimarDiasEntrega(pedido4));
+    }
+
+    @Test
+    void test0005_envioEstandarPesoInvalido() {
+        assertThrows(PesoInvalidoException.class, () -> envioEstandar.calcularCosto(pedido5));
     }
 }
