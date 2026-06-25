@@ -214,7 +214,16 @@ public class CicloDeVidaDelPedidoTest {
 
     // EXCEPCIONES EN ESTADO: CONFIRMADO
     @Test
-    void test0020_confirmadoNoSePuedeEnviar() {
+    void test0021a_confirmadoNoSeConfirmar() {
+        tienda1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+
+        assertThrows(operacionInvalidaExeption.class, () -> pedido1.confirmar());
+    }
+
+    @Test
+    void test0020b_confirmadoNoSePuedeEnviar() {
         tienda1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();

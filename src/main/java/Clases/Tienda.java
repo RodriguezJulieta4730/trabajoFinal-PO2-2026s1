@@ -47,4 +47,9 @@ public class Tienda {
     public void entregar(Pedido pedido) {
         pedido.entregar();
     }
+
+    public boolean tieneStockPara(Pedido pedido) {
+        return pedido.getCarritoDeProductos().entrySet().stream()
+                .allMatch(entry -> this.tieneStock(entry.getKey(), entry.getValue()));
+    }
 }

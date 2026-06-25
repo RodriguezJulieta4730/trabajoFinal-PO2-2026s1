@@ -7,7 +7,7 @@ public class EstadoDePedidoConfirmado implements EstadoDePedido {
 
     @Override
     public void confirmar(Pedido pedido) {
-
+        throw new operacionInvalidaExeption("el pedido ya esta confirmado");
     }
 
     @Override

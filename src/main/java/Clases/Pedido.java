@@ -5,6 +5,7 @@ import Excepciones.NoHayProductoEnPedidoException;
 import Excepciones.NoHayStockException;
 import State.EstadoDePedido;
 import State.EstadoDePedidoBorrador;
+import Strategy.MetodoDeEnvio;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -15,11 +16,20 @@ public class Pedido {
     Map<Producto, Integer> carritoDeProductos;
     EstadoDePedido estadoActual;
     private Tienda tienda;
+    private float peso;
+    private String direccion;
+    private MetodoDeEnvio metodoDeEnvio;
 
     public Pedido(Tienda tienda) {
         this.tienda = tienda;
         this.carritoDeProductos = new HashMap<>();
         this.estadoActual = new EstadoDePedidoBorrador();
+    }
+
+    public Pedido(float peso, String direccion, MetodoDeEnvio metodoDeEnvio) {
+        this.peso=peso;
+        this.direccion=direccion;
+        this.metodoDeEnvio=metodoDeEnvio;
     }
 
     // Permite a los estados cambiar el estado del pedido
@@ -85,5 +95,13 @@ public class Pedido {
 
     public void borrarCarrito() {
         this.carritoDeProductos =new HashMap<>();
+    }
+
+    public double getPrecioTotal() {
+        double precioTotal = 0;
+        for(Producto p: carritoDeProductos.keySet()){
+            precioTotal += p.getPrecioFinal();
+        }
+        return precioTotal;
     }
 }
