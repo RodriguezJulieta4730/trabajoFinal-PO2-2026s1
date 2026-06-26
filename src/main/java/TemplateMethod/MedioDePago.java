@@ -1,4 +1,6 @@
-package Clases;
+package TemplateMethod;
+
+import Clases.Cliente;
 
 public abstract class MedioDePago {
     public String pagar(double montoAPagar, Cliente cliente){

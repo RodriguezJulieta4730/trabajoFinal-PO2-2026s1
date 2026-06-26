@@ -1,4 +1,4 @@
-package Clases;
+package TemplateMethod;
 
 public interface BilleteraVirtualApi {
     boolean validarDatos(long cbu, String alias);

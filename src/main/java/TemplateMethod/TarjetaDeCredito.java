@@ -1,4 +1,6 @@
-package Clases;
+package TemplateMethod;
+
+import Clases.Cliente;
 
 public class TarjetaDeCredito extends MedioDePago {
     private TarjetaApi tarjetaApi;

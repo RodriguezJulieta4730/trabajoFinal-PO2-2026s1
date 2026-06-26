@@ -1,4 +1,6 @@
-package Clases;
+package TemplateMethod;
+
+import Clases.Cliente;
 
 public class BilleteraVirtual extends MedioDePago {
     private BilleteraVirtualApi billeteraVirtualApi;

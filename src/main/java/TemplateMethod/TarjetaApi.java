@@ -1,4 +1,6 @@
-package Clases;
+package TemplateMethod;
+
+import Clases.DatosDeTarjeta;
 
 public interface TarjetaApi {
      boolean validarDatos(DatosDeTarjeta datosDeTarjeta);
