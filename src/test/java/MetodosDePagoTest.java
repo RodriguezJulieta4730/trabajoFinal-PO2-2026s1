@@ -41,7 +41,6 @@ public class MetodosDePagoTest {
                 .thenReturn("Pago exitoso");
 
         //TRANSFERENCIA BANCARIA
-
         transferenciaApi = mock(TransferenciaApi.class);
         transferenciaBancaria = new TransferenciaBancaria(transferenciaApi);
 

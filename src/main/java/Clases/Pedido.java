@@ -3,13 +3,13 @@ package Clases;
 import Excepciones.CantidadInsuficienteException;
 import Excepciones.NoHayProductoEnPedidoException;
 import Excepciones.NoHayStockException;
+import Observer.Notificador;
 import State.EstadoDePedido;
 import State.EstadoDePedidoBorrador;
 import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @Getter
 public class Pedido {
@@ -18,18 +18,22 @@ public class Pedido {
     private final Sucursal tienda;
     private final String direccion;
     private final Notificador notificador;
+    private String email;
 
-    public Pedido(Sucursal tienda, String direccion) {
+    public Pedido(Sucursal tienda, String direccion, String email) {
         this.tienda = tienda;
         this.carritoDeProductos = new HashMap<>();
         this.estadoActual = new EstadoDePedidoBorrador();
         this.notificador = new Notificador();
         this.direccion=direccion;
+        this.email=email;
     }
 
-    // Permite a los estados cambiar el estado del pedido
     public void setEstado(EstadoDePedido nuevoEstado) {
+        EstadoDePedido estadoAnterior = this.estadoActual;
         this.estadoActual = nuevoEstado;
+        notificador.notificarCambio(this, estadoAnterior, nuevoEstado);
+
     }
 
     public void confirmar() {
