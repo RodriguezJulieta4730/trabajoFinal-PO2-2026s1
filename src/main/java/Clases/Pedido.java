@@ -15,21 +15,19 @@ import java.util.Map;
 public class Pedido {
     Map<Producto, Integer> carritoDeProductos;
     EstadoDePedido estadoActual;
-    private Tienda tienda;
+    private Sucursal tienda;
     private float peso;
     private String direccion;
-    private MetodoDeEnvio metodoDeEnvio;
 
-    public Pedido(Tienda tienda) {
+    public Pedido(Sucursal tienda) {
         this.tienda = tienda;
         this.carritoDeProductos = new HashMap<>();
         this.estadoActual = new EstadoDePedidoBorrador();
     }
 
-    public Pedido(float peso, String direccion, MetodoDeEnvio metodoDeEnvio) {
+    public Pedido(float peso, String direccion) {
         this.peso=peso;
         this.direccion=direccion;
-        this.metodoDeEnvio=metodoDeEnvio;
     }
 
     // Permite a los estados cambiar el estado del pedido

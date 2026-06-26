@@ -1,7 +1,6 @@
 package Strategy;
 
 import Clases.Pedido;
-import Clases.Tienda;
 
 public class RetiroEnSucursal implements MetodoDeEnvio{
 

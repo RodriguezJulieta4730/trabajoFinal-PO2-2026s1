@@ -9,14 +9,14 @@ import static org.mockito.Mockito.mock;
 
 public class CicloDeVidaDelPedidoTest {
     Producto producto1;
-    Tienda tienda1;
+    Sucursal tienda1;
     Pedido pedido1;
     ProductoIndividual producto2;
     ProductoIndividual producto3;
 
     @BeforeEach
     void setUp(){
-        tienda1 = new Tienda();
+        tienda1 = new Sucursal();
         pedido1 = new Pedido(tienda1);
         producto1 = mock(ProductoIndividual.class);
         producto2 = mock(ProductoIndividual.class);

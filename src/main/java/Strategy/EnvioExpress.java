@@ -8,7 +8,7 @@ public class EnvioExpress implements MetodoDeEnvio{
 
     @Override
     public float calcularCosto(Pedido pedido) {
-        return (float) ((pedido.getPrecioTotal() * this.porcentaje) + this.cargoBase);
+        return (float) (pedido.getPrecioTotal() * porcentaje + cargoBase);
     }
 
     @Override

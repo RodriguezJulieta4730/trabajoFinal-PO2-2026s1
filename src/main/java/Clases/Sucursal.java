@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class Tienda {
+public class Sucursal {
     private Map<Producto,Integer> stockProductos = new HashMap<>();
 
     public void agregarStock(Producto producto, int stock) {
