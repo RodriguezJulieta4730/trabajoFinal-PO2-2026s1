@@ -3,29 +3,29 @@ package TemplateMethod;
 import Clases.Cliente;
 
 public class BilleteraVirtual extends MedioDePago {
-    private BilleteraVirtualApi billeteraVirtualApi;
+    private final BilleteraVirtualApi billeteraVirtualApi;
 
     public BilleteraVirtual(BilleteraVirtualApi billeteraVirtualApi) {
         this.billeteraVirtualApi = billeteraVirtualApi;
     }
 
     @Override
-    boolean validarDatos(Cliente cliente) {
-        return billeteraVirtualApi.validarDatos(cliente.getCbu(),cliente.getAlias());
-    }
+    boolean validarDatos(double montoAPagar,Cliente cliente) {
+        return billeteraVirtualApi.validarDatos(montoAPagar,cliente.getCbu(),cliente.getAlias());
+    } // aclarar en informe toma de decision de pasar monto a pagar,cbu y alias
 
     @Override
     boolean reservarFondos(double montoAPagar, Cliente cliente) {
-        return false;
+        return billeteraVirtualApi.reservarFondos(montoAPagar,cliente.getCbu(),cliente.getAlias());
     }
 
     @Override
     boolean ejecutarTransaccion(double montoAPagar, Cliente cliente) {
-        return false;
+        return billeteraVirtualApi.ejecutarTransaccion(montoAPagar);
     }
 
     @Override
     String notificarResultado() {
-        return "";
+        return billeteraVirtualApi.notificarResultado();
     }
 }

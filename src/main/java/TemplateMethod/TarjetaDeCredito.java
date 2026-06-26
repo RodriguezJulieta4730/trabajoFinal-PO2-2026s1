@@ -3,14 +3,14 @@ package TemplateMethod;
 import Clases.Cliente;
 
 public class TarjetaDeCredito extends MedioDePago {
-    private TarjetaApi tarjetaApi;
+    private final TarjetaApi tarjetaApi;
 
     public TarjetaDeCredito(TarjetaApi tarjetaApi){
         this.tarjetaApi = tarjetaApi;
     }
 
     @Override
-    boolean validarDatos(Cliente cliente) {
+    boolean validarDatos(double montoAPagar,Cliente cliente) {
         return tarjetaApi.validarDatos(cliente.getDatosDeTarjeta());
     }
 
