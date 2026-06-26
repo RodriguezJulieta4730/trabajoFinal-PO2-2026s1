@@ -2,6 +2,7 @@ import Clases.*;
 import TemplateMethod.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -70,12 +71,14 @@ public class MetodosDePagoTest {
     @Test
     void test01_seRealizaUnPagoExitosoConTarjetaDeCredito() {
         String resultado = tarjetaDeCredito.pagar(pedido2.getPrecioTotal(), cliente1);
-        //        InOrder inOrder= inOrder(tarjetaApi,cliente1);
-        //        inOrder.verify(tarjetaApi,times(1)).validarDatos(datosDeCliente1);
-        //        inOrder.verify(cliente1,times(6)).getDatosDeTarjeta();
-
         assertEquals("Pago exitoso", resultado);
-        verify(tarjetaApi).validarDatos(datosDeCliente1);
+
+        InOrder inOrder = inOrder(tarjetaApi);
+        inOrder.verify(tarjetaApi).validarDatos(datosDeCliente1);
+        inOrder.verify(tarjetaApi).reservarFondos(1000.0, datosDeCliente1);
+        inOrder.verify(tarjetaApi).ejecutarTransaccion(1000.0, datosDeCliente1);
+        inOrder.verify(tarjetaApi).notificarResultado();
+        verifyNoMoreInteractions(tarjetaApi);
     }
 
     @Test
@@ -84,6 +87,11 @@ public class MetodosDePagoTest {
                 .thenReturn(false);
         String resultado = tarjetaDeCredito.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("No se pudo validar los datos", resultado);
+
+        verify(tarjetaApi).validarDatos(datosDeCliente1);
+        verify(tarjetaApi, never()).reservarFondos(anyDouble(), any());
+        verify(tarjetaApi, never()).ejecutarTransaccion(anyDouble(), any());
+        verify(tarjetaApi, never()).notificarResultado();
     }
 
     @Test
@@ -92,6 +100,12 @@ public class MetodosDePagoTest {
                 .thenReturn(false);
         String resultado = tarjetaDeCredito.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("No hay fondos suficientes", resultado);
+        InOrder inOrder = inOrder(tarjetaApi);
+        inOrder.verify(tarjetaApi).validarDatos(datosDeCliente1);
+        inOrder.verify(tarjetaApi).reservarFondos(1000.0, datosDeCliente1);
+
+        verify(tarjetaApi, never()).ejecutarTransaccion(anyDouble(), any());
+        verify(tarjetaApi, never()).notificarResultado();
     }
 
     @Test
@@ -100,6 +114,12 @@ public class MetodosDePagoTest {
                 .thenReturn(false);
         String resultado = tarjetaDeCredito.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("No se pudo ejecutar la transacción", resultado);
+        InOrder inOrder = inOrder(tarjetaApi);
+        inOrder.verify(tarjetaApi).validarDatos(datosDeCliente1);
+        inOrder.verify(tarjetaApi).reservarFondos(1000.0, datosDeCliente1);
+        inOrder.verify(tarjetaApi).ejecutarTransaccion(1000.0, datosDeCliente1);
+
+        verify(tarjetaApi, never()).notificarResultado();
     }
 
 
@@ -108,6 +128,12 @@ public class MetodosDePagoTest {
     void test01_seRealizaUnPagoExitosoConTransferenciaBancaria() {
         String resultado = transferenciaBancaria.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("Pago exitoso", resultado);
+        InOrder inOrder = inOrder(transferenciaApi);
+        inOrder.verify(transferenciaApi).validarDatos(278976543L, "raul.fernandez5");
+        inOrder.verify(transferenciaApi).reservarFondos(1000.0, 278976543L, "raul.fernandez5");
+        inOrder.verify(transferenciaApi).ejecutarTransaccion(1000.0, 278976543L, "raul.fernandez5");
+        inOrder.verify(transferenciaApi).notificarResultado();
+        verifyNoMoreInteractions(transferenciaApi);
     }
 
     @Test
@@ -116,6 +142,10 @@ public class MetodosDePagoTest {
                 .thenReturn(false);
         String resultado = transferenciaBancaria.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("No se pudo validar los datos", resultado);
+        verify(transferenciaApi).validarDatos(278976543L, "raul.fernandez5");
+        verify(transferenciaApi, never()).reservarFondos(anyDouble(), anyLong(), anyString());
+        verify(transferenciaApi, never()).ejecutarTransaccion(anyDouble(), anyLong(), anyString());
+        verify(transferenciaApi, never()).notificarResultado();
     }
 
 
@@ -125,6 +155,12 @@ public class MetodosDePagoTest {
                 .thenReturn(false);
         String resultado = transferenciaBancaria.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("No hay fondos suficientes", resultado);
+        InOrder inOrder = inOrder(transferenciaApi);
+        inOrder.verify(transferenciaApi).validarDatos(278976543L, "raul.fernandez5");
+        inOrder.verify(transferenciaApi).reservarFondos(1000.0, 278976543L, "raul.fernandez5");
+
+        verify(transferenciaApi, never()).ejecutarTransaccion(anyDouble(), anyLong(), anyString());
+        verify(transferenciaApi, never()).notificarResultado();
     }
 
     @Test
@@ -133,6 +169,13 @@ public class MetodosDePagoTest {
                 .thenReturn(false);
         String resultado = transferenciaBancaria.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("No se pudo ejecutar la transacción", resultado);
+
+        InOrder inOrder = inOrder(transferenciaApi);
+        inOrder.verify(transferenciaApi).validarDatos(278976543L, "raul.fernandez5");
+        inOrder.verify(transferenciaApi).reservarFondos(1000.0, 278976543L, "raul.fernandez5");
+        inOrder.verify(transferenciaApi).ejecutarTransaccion(1000.0, 278976543L, "raul.fernandez5");
+
+        verify(transferenciaApi, never()).notificarResultado();
     }
 
     //TESTS BILLETERA VIRTUAL
@@ -140,6 +183,13 @@ public class MetodosDePagoTest {
     void test01_seRealizaUnPagoExitosoConBilleteraVirtual() {
         String resultado = billeteraVirtual.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("Pago exitoso", resultado);
+
+        InOrder inOrder = inOrder(billeteraVirtualApi);
+        inOrder.verify(billeteraVirtualApi).validarDatos(1000.0, 278976543L, "raul.fernandez5");
+        inOrder.verify(billeteraVirtualApi).reservarFondos(1000.0, 278976543L, "raul.fernandez5");
+        inOrder.verify(billeteraVirtualApi).ejecutarTransaccion(1000.0);
+        inOrder.verify(billeteraVirtualApi).notificarResultado();
+        verifyNoMoreInteractions(billeteraVirtualApi);
     }
 
     @Test
@@ -148,6 +198,11 @@ public class MetodosDePagoTest {
                 .thenReturn(false);
         String resultado = billeteraVirtual.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("No se pudo validar los datos", resultado);
+
+        verify(billeteraVirtualApi).validarDatos(1000.0, 278976543L, "raul.fernandez5");
+        verify(billeteraVirtualApi, never()).reservarFondos(anyDouble(), anyLong(), anyString());
+        verify(billeteraVirtualApi, never()).ejecutarTransaccion(anyDouble());
+        verify(billeteraVirtualApi, never()).notificarResultado();
     }
 
 
@@ -157,6 +212,13 @@ public class MetodosDePagoTest {
                 .thenReturn(false);
         String resultado = billeteraVirtual.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("No hay fondos suficientes", resultado);
+
+        InOrder inOrder = inOrder(billeteraVirtualApi);
+        inOrder.verify(billeteraVirtualApi).validarDatos(1000.0, 278976543L, "raul.fernandez5");
+        inOrder.verify(billeteraVirtualApi).reservarFondos(1000.0, 278976543L, "raul.fernandez5");
+
+        verify(billeteraVirtualApi, never()).ejecutarTransaccion(anyDouble());
+        verify(billeteraVirtualApi, never()).notificarResultado();
     }
 
     @Test
@@ -165,5 +227,12 @@ public class MetodosDePagoTest {
                 .thenReturn(false);
         String resultado = billeteraVirtual.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("No se pudo ejecutar la transacción", resultado);
+
+        InOrder inOrder = inOrder(billeteraVirtualApi);
+        inOrder.verify(billeteraVirtualApi).validarDatos(1000.0, 278976543L, "raul.fernandez5");
+        inOrder.verify(billeteraVirtualApi).reservarFondos(1000.0, 278976543L, "raul.fernandez5");
+        inOrder.verify(billeteraVirtualApi).ejecutarTransaccion(1000.0);
+
+        verify(billeteraVirtualApi, never()).notificarResultado();
     }
 }

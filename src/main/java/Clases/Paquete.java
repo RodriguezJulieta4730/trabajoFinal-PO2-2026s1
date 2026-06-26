@@ -33,4 +33,13 @@ public class Paquete extends Producto {
         }
         return precioTotal * (1-descuento);
     }
+
+    @Override
+    public float getPeso() {
+        float pesoTotal = 0;
+        for(Producto p: listaDeProducto){
+            pesoTotal+= p.getPeso();
+        }
+        return 0;
+    }
 }

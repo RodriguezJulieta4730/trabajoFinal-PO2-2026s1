@@ -8,4 +8,6 @@ public abstract class Producto {
     String descripcion;
 
     public abstract double getPrecioFinal();
+
+    public abstract float getPeso();
 }

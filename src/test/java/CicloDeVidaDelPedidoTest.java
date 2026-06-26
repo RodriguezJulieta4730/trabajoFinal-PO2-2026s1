@@ -17,7 +17,7 @@ public class CicloDeVidaDelPedidoTest {
     @BeforeEach
     void setUp(){
         tienda1 = new Sucursal();
-        pedido1 = new Pedido(tienda1);
+        pedido1 = new Pedido(tienda1, "Boedo 671");
         producto1 = mock(ProductoIndividual.class);
         producto2 = mock(ProductoIndividual.class);
         producto3 = mock(ProductoIndividual.class);

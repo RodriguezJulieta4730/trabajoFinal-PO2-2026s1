@@ -5,28 +5,25 @@ import Excepciones.NoHayProductoEnPedidoException;
 import Excepciones.NoHayStockException;
 import State.EstadoDePedido;
 import State.EstadoDePedidoBorrador;
-import Strategy.MetodoDeEnvio;
 import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Getter
 public class Pedido {
     Map<Producto, Integer> carritoDeProductos;
     EstadoDePedido estadoActual;
-    private Sucursal tienda;
-    private float peso;
-    private String direccion;
+    private final Sucursal tienda;
+    private final String direccion;
+    private final Notificador notificador;
 
-    public Pedido(Sucursal tienda) {
+    public Pedido(Sucursal tienda, String direccion) {
         this.tienda = tienda;
         this.carritoDeProductos = new HashMap<>();
         this.estadoActual = new EstadoDePedidoBorrador();
-    }
-
-    public Pedido(float peso, String direccion) {
-        this.peso=peso;
+        this.notificador = new Notificador();
         this.direccion=direccion;
     }
 
@@ -101,5 +98,11 @@ public class Pedido {
             precioTotal += p.getPrecioFinal();
         }
         return precioTotal;
+    }
+
+    public float getPeso(){
+        float[] pesoTotal={0};
+        carritoDeProductos.forEach((p,n)-> pesoTotal[0] += p.getPeso() * n);
+        return pesoTotal[0];
     }
 }

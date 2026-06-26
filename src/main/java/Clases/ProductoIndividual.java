@@ -50,6 +50,16 @@ public class ProductoIndividual extends Producto {
         return precioBase - precioBase*descuento;
     }
 
+    @Override
+    public float getPeso() {
+        Object pesoObj = this.getAtributoExtra("peso");
+
+        if (pesoObj == null) {
+            return 0.0f;
+        }
+        return ((Number) pesoObj).floatValue();
+    }
+
     public void setAtributoExtra(String atributoExtra, Object valor) {
         atributosExtra.put(atributoExtra,valor);
     }
