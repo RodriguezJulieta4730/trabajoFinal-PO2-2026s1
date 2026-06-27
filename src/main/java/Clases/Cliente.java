@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class Cliente {
-    private DatosDeTarjeta datosDeTarjeta;
-    private long cbu;
-    private String alias;
+    private final DatosDeTarjeta datosDeTarjeta;
+    private final long cbu;
+    private final String alias;
 
     public Cliente(DatosDeTarjeta datosDeTarjeta, long cbu, String alias){
         this.datosDeTarjeta = datosDeTarjeta;

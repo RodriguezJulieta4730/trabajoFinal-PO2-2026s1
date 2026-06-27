@@ -1,6 +1,6 @@
 import Clases.*;
-import Observer.*;
-import State.*;
+import NotificacionesDelPedido.*;
+import CicloDeVidaDelPedido.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -113,7 +113,7 @@ public class NotificacionesDePedidoTest {
         pedido.setEstado(estadoCancelado);
 
         verify(mockMailSender, times(1)).enviarMail(
-                eq("Julieta@email.com"),
+                eq("Julieta@email.com"  ),
                 contains("vuelvas"),
                 contains("5% de descuento"),
                 eq("CUPON5OFF")

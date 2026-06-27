@@ -1,5 +1,6 @@
 package Clases;
 
+import BusquedaEnElCatalogo.CriterioDeBusqueda;
 import Excepciones.StockNegativoException;
 import lombok.Getter;
 
@@ -8,8 +9,8 @@ import java.util.stream.Collectors;
 
 @Getter
 public class Sucursal {
-    private Map<Producto,Integer> stockDeProductos = new HashMap<>();
-    private Set<Producto> catalogoDeProductos = new HashSet<>();
+    private final Map<Producto,Integer> stockDeProductos = new HashMap<>();
+    private final Set<Producto> catalogoDeProductos = new HashSet<>();
 
     public void agregarStock(Producto producto, int stock) {
         catalogoDeProductos.add(producto);
@@ -56,8 +57,7 @@ public class Sucursal {
     }
 
     public List<Producto> filtrar(CriterioDeBusqueda criterioDeBusqueda){
-        return catalogoDeProductos.stream().filter(producto -> criterioDeBusqueda
-                .cumpleCondicion(producto)).collect(Collectors.toList());
+        return catalogoDeProductos.stream().filter(criterioDeBusqueda::cumpleCondicion).collect(Collectors.toList());
     }
 
 }

@@ -1,10 +1,10 @@
 import Clases.Pedido;
 import Clases.Sucursal;
 import Excepciones.PesoInvalidoException;
-import Strategy.EnvioEstandar;
-import Strategy.EnvioExpress;
-import Strategy.MetodoDeEnvio;
-import Strategy.RetiroEnSucursal;
+import MetodosDeEnvio.EnvioEstandar;
+import MetodosDeEnvio.EnvioExpress;
+import MetodosDeEnvio.MetodoDeEnvio;
+import MetodosDeEnvio.RetiroEnSucursal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

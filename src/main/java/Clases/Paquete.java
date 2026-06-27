@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 public class Paquete extends Producto {
-    private List<Producto> listaDeProducto = new ArrayList<>();
+    private final List<Producto> listaDeProducto = new ArrayList<>();
     private double descuento=0;
 
     public Paquete(String nombre, String descripcion, Producto producto1, Producto producto2,Categoria categoria) {
@@ -47,7 +47,7 @@ public class Paquete extends Producto {
 
     @Override
     public double getPrecioBase() {
-        return listaDeProducto.stream().mapToDouble(producto -> producto.getPrecioBase()).sum();
+        return listaDeProducto.stream().mapToDouble(Producto::getPrecioBase).sum();
     }
 
 }
