@@ -9,7 +9,6 @@ import java.util.Map;
 public class ProductoIndividual extends Producto {
     private final String sku;
     private final String marca;
-    private final double precioBase;
     private double descuento = 0;
     private final Map<String,Object> atributosExtra = new HashMap<>();
 
@@ -57,6 +56,11 @@ public class ProductoIndividual extends Producto {
             return 0.0f;
         }
         return ((Number) pesoObj).floatValue();
+    }
+
+    @Override
+    public double getPrecioBase() {
+        return precioBase;
     }
 
     public void setAtributoExtra(String atributoExtra, Object valor) {

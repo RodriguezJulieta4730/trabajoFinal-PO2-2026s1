@@ -42,7 +42,12 @@ public class Paquete extends Producto {
         for(Producto p: listaDeProducto){
             pesoTotal+= p.getPeso();
         }
-        return 0;
+        return pesoTotal;
+    }
+
+    @Override
+    public double getPrecioBase() {
+        return listaDeProducto.stream().mapToDouble(producto -> producto.getPrecioBase()).sum();
     }
 
 }

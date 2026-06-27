@@ -104,8 +104,8 @@ public class CicloDeVidaDelPedidoTest {
         pedido1.confirmar();
 
         assertInstanceOf(EstadoDePedidoConfirmado.class, pedido1.getEstadoActual());
-        assertEquals(2, tienda1.getStockProductos().get(producto1));
-        assertEquals(2, tienda1.getStockProductos().get(producto2));
+        assertEquals(2, tienda1.getStockDeProductos().get(producto1));
+        assertEquals(2, tienda1.getStockDeProductos().get(producto2));
     }
 
     @Test
@@ -118,8 +118,8 @@ public class CicloDeVidaDelPedidoTest {
         pedido1.cancelar();
 
         assertTrue(pedido1.getCarritoDeProductos().isEmpty());
-        assertEquals(4,tienda1.getStockProductos().get(producto1));
-        assertEquals(4,tienda1.getStockProductos().get(producto2));
+        assertEquals(4,tienda1.getStockDeProductos().get(producto1));
+        assertEquals(4,tienda1.getStockDeProductos().get(producto2));
     }
 
     @Test
@@ -132,8 +132,8 @@ public class CicloDeVidaDelPedidoTest {
         pedido1.pagar();
 
         assertInstanceOf(EstadoPedidoEnPreparacion.class, pedido1.getEstadoActual());
-        assertEquals(2,tienda1.getStockProductos().get(producto1));
-        assertEquals(2,tienda1.getStockProductos().get(producto2));
+        assertEquals(2,tienda1.getStockDeProductos().get(producto1));
+        assertEquals(2,tienda1.getStockDeProductos().get(producto2));
     }
 
     @Test
@@ -147,8 +147,8 @@ public class CicloDeVidaDelPedidoTest {
         pedido1.cancelar();
 
         assertInstanceOf(EstadoDePedidoCancelado.class, pedido1.getEstadoActual());
-        assertEquals(4,tienda1.getStockProductos().get(producto1));
-        assertEquals(4,tienda1.getStockProductos().get(producto2));
+        assertEquals(4,tienda1.getStockDeProductos().get(producto1));
+        assertEquals(4,tienda1.getStockDeProductos().get(producto2));
     }
 
     @Test
@@ -162,8 +162,8 @@ public class CicloDeVidaDelPedidoTest {
         pedido1.enviar();
 
         assertInstanceOf(EstadoDePedidoEnviado.class, pedido1.getEstadoActual());
-        assertEquals(2,tienda1.getStockProductos().get(producto1));
-        assertEquals(2,tienda1.getStockProductos().get(producto2));
+        assertEquals(2,tienda1.getStockDeProductos().get(producto1));
+        assertEquals(2,tienda1.getStockDeProductos().get(producto2));
     }
 
     @Test
@@ -178,8 +178,8 @@ public class CicloDeVidaDelPedidoTest {
         pedido1.cancelar();
 
         assertInstanceOf(EstadoDePedidoCancelado.class, pedido1.getEstadoActual());
-        assertEquals(4,tienda1.getStockProductos().get(producto1));
-        assertEquals(4,tienda1.getStockProductos().get(producto2));
+        assertEquals(4,tienda1.getStockDeProductos().get(producto1));
+        assertEquals(4,tienda1.getStockDeProductos().get(producto2));
     }
 
     @Test
