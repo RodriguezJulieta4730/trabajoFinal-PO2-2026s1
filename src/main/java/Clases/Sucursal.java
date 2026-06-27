@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 public class Sucursal {
@@ -52,4 +53,36 @@ public class Sucursal {
         return pedido.getCarritoDeProductos().entrySet().stream()
                 .allMatch(entry -> this.tieneStock(entry.getKey(), entry.getValue()));
     }
+
+    public Map<Producto,Integer> filtrarPorNombre(String nombre) {
+        String nombreMinuscula = nombre.toLowerCase();
+
+        return stockProductos.entrySet().stream()
+                .filter(entry -> entry.getKey().getNombre().toLowerCase().contains(nombreMinuscula) ||
+                        entry.getKey().getDescripcion().toLowerCase().contains(nombreMinuscula))
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey(),
+                        entry -> entry.getValue()
+                ));
+    }
+
+    public Map<Producto, Integer> filtrarPorCategoria(Categoria categoria) {
+        return stockProductos.entrySet().stream()
+                .filter(entry -> entry.getKey().getCategoria().equals(categoria)).collect(Collectors.toMap(
+                        entry -> entry.getKey(),
+                        entry -> entry.getValue()
+                ));
+    }
+
+//    public Map<Producto, Integer> filtrarPorDisponibilidad(Producto producto) {
+//        return stockProductos.entrySet().stream().filter(entry -> entry.getValue(producto).)
+//    }
+
+//    public Map<Producto, Integer> filtrarPorPrecioMaximo(double monto) {
+//        return stockProductos.entrySet().stream().filter(entry -> entry.getKey().g )
+//    }
+// aca hay un problema porque en este filtro nos pide trabajar con el precio base del item y en paquete nosotras solo calculamos en final
+    // ese final deberia ser precio base, pero no se bien como cambiarlo
+    // paquete deberia tener precio base que es la suma de todos los precios mas el descuento y producto individual, precio bas
 }
+

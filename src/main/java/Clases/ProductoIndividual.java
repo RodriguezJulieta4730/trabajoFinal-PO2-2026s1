@@ -9,7 +9,6 @@ import java.util.Map;
 public class ProductoIndividual extends Producto {
     private final String sku;
     private final String marca;
-    private final Categoria categoria;
     private final double precioBase;
     private double descuento = 0;
     private final Map<String,Object> atributosExtra = new HashMap<>();

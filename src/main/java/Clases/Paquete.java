@@ -10,19 +10,21 @@ public class Paquete extends Producto {
     private List<Producto> listaDeProducto = new ArrayList<>();
     private double descuento=0;
 
-    public Paquete(String nombre, String descripcion, Producto producto1, Producto producto2) {
+    public Paquete(String nombre, String descripcion, Producto producto1, Producto producto2,Categoria categoria) {
         this.nombre=nombre;
         this.descripcion=descripcion;
         listaDeProducto.add(producto1);
         listaDeProducto.add(producto2);
+        this.categoria = categoria;
     }
 
-    public Paquete(String nombre, String descripcion, Producto producto1, Producto producto2, double descuento) {
+    public Paquete(String nombre, String descripcion, Producto producto1, Producto producto2, double descuento,Categoria categoria) {
         this.nombre=nombre;
         this.descripcion=descripcion;
         listaDeProducto.add(producto1);
         listaDeProducto.add(producto2);
         this.descuento=descuento;
+        this.categoria = categoria;
     }
 
     @Override
@@ -42,4 +44,5 @@ public class Paquete extends Producto {
         }
         return 0;
     }
+
 }
