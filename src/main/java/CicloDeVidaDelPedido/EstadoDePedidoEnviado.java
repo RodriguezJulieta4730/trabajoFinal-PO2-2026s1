@@ -11,7 +11,6 @@ public class EstadoDePedidoEnviado implements EstadoDePedido {
 
     }
 
-
     @Override
     public void cancelar(Pedido pedido) {
         pedido.getTienda().cancelarPedido(pedido.getCarritoDeProductos());

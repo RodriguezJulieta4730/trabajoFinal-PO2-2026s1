@@ -9,6 +9,7 @@ import CicloDeVidaDelPedido.EstadoDePedido;
 import CicloDeVidaDelPedido.EstadoDePedidoBorrador;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,9 +22,11 @@ public class Pedido {
     private final Notificador notificador;
     private final String email;
     private final MetodoDeEnvio metodoDeEnvio;
+    private final LocalDate fecha;
 
-    public Pedido(Sucursal tienda, String direccion, String email,MetodoDeEnvio metodoDeEnvio) {
+    public Pedido(Sucursal tienda, String direccion, String email, MetodoDeEnvio metodoDeEnvio) {
         this.tienda = tienda;
+        this.fecha = LocalDate.now();
         this.carritoDeProductos = new HashMap<>();
         this.estadoActual = new EstadoDePedidoBorrador();
         this.notificador = new Notificador();
@@ -33,30 +36,31 @@ public class Pedido {
     }
 
     public void setEstado(EstadoDePedido nuevoEstado) {
-        EstadoDePedido estadoAnterior = this.estadoActual;
-        this.estadoActual = nuevoEstado;
+        EstadoDePedido estadoAnterior = estadoActual;
+        estadoActual = nuevoEstado;
         notificador.notificarCambio(this, estadoAnterior, nuevoEstado);
 
     }
 
     public void confirmar() {
-        this.estadoActual.confirmar(this);
+        estadoActual.confirmar(this);
     }
 
     public void cancelar() {
-        this.estadoActual.cancelar(this);
+        estadoActual.cancelar(this);
     }
 
     public void pagar() {
-        this.estadoActual.pagar(this);
+        estadoActual.pagar(this);
     }
 
     public void enviar() {
-        this.estadoActual.enviar(this);
+        estadoActual.enviar(this);
     }
 
     public void entregar() {
-        this.estadoActual.entregar(this);
+        estadoActual.entregar(this);
+        tienda.registarPedidoEnHistorial(this);
     }
 
 

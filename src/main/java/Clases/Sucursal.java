@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 public class Sucursal {
     private final Map<Producto,Integer> stockDeProductos = new HashMap<>();
     private final Set<Producto> catalogoDeProductos = new HashSet<>();
+    private final List<Pedido> historialPedidos = new ArrayList<>();
 
     public void agregarStock(Producto producto, int stock) {
         catalogoDeProductos.add(producto);
@@ -60,5 +61,8 @@ public class Sucursal {
         return catalogoDeProductos.stream().filter(criterioDeBusqueda::cumpleCondicion).collect(Collectors.toList());
     }
 
+    public void registarPedidoEnHistorial(Pedido pedido) {
+        historialPedidos.add(pedido);
+    }
 }
 
