@@ -3,6 +3,7 @@ package Clases;
 import Excepciones.CantidadInsuficienteException;
 import Excepciones.NoHayProductoEnPedidoException;
 import Excepciones.NoHayStockException;
+import MetodosDeEnvio.MetodoDeEnvio;
 import NotificacionesDelPedido.Notificador;
 import CicloDeVidaDelPedido.EstadoDePedido;
 import CicloDeVidaDelPedido.EstadoDePedidoBorrador;
@@ -19,14 +20,16 @@ public class Pedido {
     private final String direccion;
     private final Notificador notificador;
     private final String email;
+    private final MetodoDeEnvio metodoDeEnvio;
 
-    public Pedido(Sucursal tienda, String direccion, String email) {
+    public Pedido(Sucursal tienda, String direccion, String email,MetodoDeEnvio metodoDeEnvio) {
         this.tienda = tienda;
         this.carritoDeProductos = new HashMap<>();
         this.estadoActual = new EstadoDePedidoBorrador();
         this.notificador = new Notificador();
         this.direccion=direccion;
         this.email=email;
+        this.metodoDeEnvio=metodoDeEnvio;
     }
 
     public void setEstado(EstadoDePedido nuevoEstado) {
@@ -84,12 +87,11 @@ public class Pedido {
     }
 
     public void reembolsarCostoProductos() {
-        //deberiamos guardar en algun momento al cliente como para despues
-        //mandarle un mensaje tipo "Se ha reembolsado el costo de los productos"
+        System.out.println("Nota de Crédito generada: Se reembolsaron $" + this.getPrecioTotal() + " por los productos del pedido a " + this.getEmail());
     }
 
     public void reembolsarEnvio() {
-        //mandarle un mensaje tipo "Se ha reembolsado el costo del envio"
+        System.out.println("Nota de Crédito generada: Se reembolsaron $" + metodoDeEnvio.calcularCosto(this) + " por el costo de envío a " + this.getEmail());
     }
 
     public void borrarCarrito() {

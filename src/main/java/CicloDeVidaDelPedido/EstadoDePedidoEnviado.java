@@ -16,6 +16,7 @@ public class EstadoDePedidoEnviado implements EstadoDePedido {
     public void cancelar(Pedido pedido) {
         pedido.getTienda().cancelarPedido(pedido.getCarritoDeProductos());
         pedido.getTienda().reembolsarCostoProductos(pedido);
+        pedido.borrarCarrito();
         pedido.setEstado(new EstadoDePedidoCancelado());
     }
 

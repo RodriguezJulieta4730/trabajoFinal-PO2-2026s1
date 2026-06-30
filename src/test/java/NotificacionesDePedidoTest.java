@@ -1,4 +1,6 @@
 import Clases.*;
+import MetodosDeEnvio.EnvioEstandar;
+import MetodosDeEnvio.MetodoDeEnvio;
 import NotificacionesDelPedido.*;
 import CicloDeVidaDelPedido.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,13 +17,14 @@ public class NotificacionesDePedidoTest {
     private NotificadorDeEmail notificadorEmail;
     private GeneradorDeFactura generadorFactura;
     private Fidelizacion sistemaFidelizacion;
+    private MetodoDeEnvio envioEstandar;
 
     @BeforeEach
     void setUp() {
         mockMailSender = mock(MailSender.class);
         mockTienda = mock(Sucursal.class);
-
-        pedido = new Pedido(mockTienda, "boedo 671","Julieta@email.com");
+        envioEstandar = new EnvioEstandar();
+        pedido = new Pedido(mockTienda, "boedo 671","Julieta@email.com",envioEstandar);
 
         notificadorEmail = new NotificadorDeEmail(mockMailSender);
         generadorFactura = new GeneradorDeFactura();

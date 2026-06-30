@@ -1,11 +1,14 @@
 import Clases.*;
 import Excepciones.*;
 import CicloDeVidaDelPedido.*;
+import MetodosDeEnvio.EnvioEstandar;
+import MetodosDeEnvio.MetodoDeEnvio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CicloDeVidaDelPedidoTest {
     Producto producto1;
@@ -13,14 +16,19 @@ public class CicloDeVidaDelPedidoTest {
     Pedido pedido1;
     ProductoIndividual producto2;
     ProductoIndividual producto3;
+    MetodoDeEnvio envioEstandar;
 
     @BeforeEach
     void setUp(){
+        envioEstandar = new EnvioEstandar();
         tienda1 = new Sucursal();
-        pedido1 = new Pedido(tienda1, "Boedo 671","Julieta@email.com");
+        pedido1 = new Pedido(tienda1, "Boedo 671","Julieta@email.com",envioEstandar);
         producto1 = mock(ProductoIndividual.class);
         producto2 = mock(ProductoIndividual.class);
         producto3 = mock(ProductoIndividual.class);
+
+        when(producto1.getPeso()).thenReturn(1.5f);
+        when(producto1.getPrecioFinal()).thenReturn(500.0);
     }
 
     @Test

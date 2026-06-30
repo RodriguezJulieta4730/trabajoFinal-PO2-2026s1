@@ -15,6 +15,9 @@ public class EstadoPedidoEnPreparacion implements EstadoDePedido {
     public void cancelar(Pedido pedido) {
         pedido.setEstado(new EstadoDePedidoCancelado());
         pedido.getTienda().cancelarPedido(pedido.getCarritoDeProductos());
+        pedido.getTienda().reembolsarCostoProductos(pedido);
+        pedido.getTienda().reembolsarEnvio(pedido);
+        pedido.borrarCarrito();
     }
 
     @Override
