@@ -1,11 +1,9 @@
 package MetodosDePago;
 
-import Clases.DatosDeTarjeta;
-
 public interface TarjetaApi {
-     boolean validarDatos(DatosDeTarjeta datosDeTarjeta);
-     boolean reservarFondos(double montoAPagar, DatosDeTarjeta datosDeTarjeta);
-     boolean ejecutarTransaccion(double montoAPagar, DatosDeTarjeta datosDeTarjeta);
+     boolean validarDatos(String datosDeTarjeta);
+     boolean reservarFondos(double montoAPagar, String datosDeTarjeta);
+     boolean ejecutarTransaccion(double montoAPagar, String datosDeTarjeta);
      String notificarResultado();
 
 }

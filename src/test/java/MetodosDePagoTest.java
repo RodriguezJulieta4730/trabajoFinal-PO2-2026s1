@@ -14,7 +14,6 @@ public class MetodosDePagoTest {
     MedioDePago billeteraVirtual;
     BilleteraVirtualApi billeteraVirtualApi;
     Cliente cliente1;
-    DatosDeTarjeta datosDeCliente1;
     Pedido pedido2;
     TransferenciaApi transferenciaApi;
 
@@ -26,10 +25,9 @@ public class MetodosDePagoTest {
         //TARJETA DE CRÉDITO
         tarjetaApi = mock(TarjetaApi.class);
         tarjetaDeCredito = new TarjetaDeCredito(tarjetaApi);
-        datosDeCliente1 = mock(DatosDeTarjeta.class);
 
         when(pedido2.getPrecioTotal()).thenReturn(1000.0);
-        when(cliente1.getDatosDeTarjeta()).thenReturn(datosDeCliente1);
+        when(cliente1.getDatosDeTarjeta()).thenReturn("23456778,970,07/27");
 
         when(tarjetaApi.validarDatos(cliente1.getDatosDeTarjeta()))
                 .thenReturn(true);
@@ -73,9 +71,9 @@ public class MetodosDePagoTest {
         assertEquals("Pago exitoso", resultado);
 
         InOrder inOrder = inOrder(tarjetaApi);
-        inOrder.verify(tarjetaApi).validarDatos(datosDeCliente1);
-        inOrder.verify(tarjetaApi).reservarFondos(1000.0, datosDeCliente1);
-        inOrder.verify(tarjetaApi).ejecutarTransaccion(1000.0, datosDeCliente1);
+        inOrder.verify(tarjetaApi).validarDatos("23456778,970,07/27");
+        inOrder.verify(tarjetaApi).reservarFondos(1000.0, "23456778,970,07/27");
+        inOrder.verify(tarjetaApi).ejecutarTransaccion(1000.0, "23456778,970,07/27");
         inOrder.verify(tarjetaApi).notificarResultado();
         verifyNoMoreInteractions(tarjetaApi);
     }
@@ -87,7 +85,7 @@ public class MetodosDePagoTest {
         String resultado = tarjetaDeCredito.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("No se pudo validar los datos", resultado);
 
-        verify(tarjetaApi).validarDatos(datosDeCliente1);
+        verify(tarjetaApi).validarDatos("23456778,970,07/27");
         verify(tarjetaApi, never()).reservarFondos(anyDouble(), any());
         verify(tarjetaApi, never()).ejecutarTransaccion(anyDouble(), any());
         verify(tarjetaApi, never()).notificarResultado();
@@ -100,8 +98,8 @@ public class MetodosDePagoTest {
         String resultado = tarjetaDeCredito.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("No hay fondos suficientes", resultado);
         InOrder inOrder = inOrder(tarjetaApi);
-        inOrder.verify(tarjetaApi).validarDatos(datosDeCliente1);
-        inOrder.verify(tarjetaApi).reservarFondos(1000.0, datosDeCliente1);
+        inOrder.verify(tarjetaApi).validarDatos("23456778,970,07/27");
+        inOrder.verify(tarjetaApi).reservarFondos(1000.0, "23456778,970,07/27");
 
         verify(tarjetaApi, never()).ejecutarTransaccion(anyDouble(), any());
         verify(tarjetaApi, never()).notificarResultado();
@@ -114,9 +112,9 @@ public class MetodosDePagoTest {
         String resultado = tarjetaDeCredito.pagar(pedido2.getPrecioTotal(), cliente1);
         assertEquals("No se pudo ejecutar la transacción", resultado);
         InOrder inOrder = inOrder(tarjetaApi);
-        inOrder.verify(tarjetaApi).validarDatos(datosDeCliente1);
-        inOrder.verify(tarjetaApi).reservarFondos(1000.0, datosDeCliente1);
-        inOrder.verify(tarjetaApi).ejecutarTransaccion(1000.0, datosDeCliente1);
+        inOrder.verify(tarjetaApi).validarDatos("23456778,970,07/27");
+        inOrder.verify(tarjetaApi).reservarFondos(1000.0, "23456778,970,07/27");
+        inOrder.verify(tarjetaApi).ejecutarTransaccion(1000.0, "23456778,970,07/27");
 
         verify(tarjetaApi, never()).notificarResultado();
     }
