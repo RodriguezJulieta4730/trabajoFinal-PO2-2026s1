@@ -7,7 +7,7 @@ public class EstadoDePedidoBorrador implements EstadoDePedido{
 
     @Override
     public void confirmar(Pedido pedido) {
-        pedido.getTienda().decrementarStock(pedido.getCarritoDeProductos());
+        pedido.getSucursal().decrementarStock(pedido.getCarritoDeProductos());
         pedido.setEstado(new EstadoDePedidoConfirmado());
     }
 

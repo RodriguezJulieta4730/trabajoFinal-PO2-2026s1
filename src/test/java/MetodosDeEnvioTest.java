@@ -20,8 +20,8 @@ public class MetodosDeEnvioTest {
     Pedido pedido4;
     Pedido pedido5;
 
-    Sucursal tienda;
-    Sucursal tienda2;
+    Sucursal sucursal1;
+    Sucursal sucursal2;
 
     MetodoDeEnvio envioEstandar;
     MetodoDeEnvio envioExpress;
@@ -41,14 +41,14 @@ public class MetodosDeEnvioTest {
         when(pedido2.getPrecioTotal()).thenReturn(1000.0);
 
         pedido3 = mock(Pedido.class);
-        tienda = mock(Sucursal.class);
-        when(pedido3.getTienda()).thenReturn(tienda);
-        when(tienda.tieneStockPara(pedido3)).thenReturn(true);
+        sucursal2 = mock(Sucursal.class);
+        when(pedido3.getSucursal()).thenReturn(sucursal2);
+        when(sucursal2.tieneStockPara(pedido3)).thenReturn(true);
 
         pedido4 = mock(Pedido.class);
-        tienda2 = mock(Sucursal.class);
-        when(pedido4.getTienda()).thenReturn(tienda2);
-        when(tienda2.tieneStockPara(pedido4)).thenReturn(false);
+        sucursal1 = mock(Sucursal.class);
+        when(pedido4.getSucursal()).thenReturn(sucursal1);
+        when(sucursal1.tieneStockPara(pedido4)).thenReturn(false);
 
         pedido5 = mock(Pedido.class);
         when(pedido5.getPeso()).thenReturn(-1.0F);

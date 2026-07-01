@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 
 public class CicloDeVidaDelPedidoTest {
     Producto producto1;
-    Sucursal tienda1;
+    Sucursal sucursal1;
     Pedido pedido1;
     ProductoIndividual producto2;
     ProductoIndividual producto3;
@@ -21,8 +21,8 @@ public class CicloDeVidaDelPedidoTest {
     @BeforeEach
     void setUp(){
         envioEstandar = new EnvioEstandar();
-        tienda1 = new Sucursal();
-        pedido1 = new Pedido(tienda1, "Boedo 671","Julieta@email.com",envioEstandar);
+        sucursal1 = new Sucursal();
+        pedido1 = new Pedido(sucursal1, "Boedo 671","Julieta@email.com",envioEstandar);
         producto1 = mock(ProductoIndividual.class);
         producto2 = mock(ProductoIndividual.class);
         producto3 = mock(ProductoIndividual.class);
@@ -33,7 +33,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test001_seAgregaUnProductoAlPedido(){
-        tienda1.agregarStock(producto1,4);
+        sucursal1.agregarStock(producto1,4);
         pedido1.agregarProducto(producto1,1);
         assertInstanceOf(EstadoDePedidoBorrador.class,pedido1.getEstadoActual());
         assertTrue(pedido1.getCarritoDeProductos().containsKey(producto1));
@@ -42,8 +42,8 @@ public class CicloDeVidaDelPedidoTest {
     @Test
     void test002_seAgregaUnProductoYUnPaqueteAlPedido(){
         Producto paquete1 = mock(Paquete.class);
-        tienda1.agregarStock(producto1,4);
-        tienda1.agregarStock(paquete1,1);
+        sucursal1.agregarStock(producto1,4);
+        sucursal1.agregarStock(paquete1,1);
         pedido1.agregarProducto(producto1,1);
         pedido1.agregarProducto(paquete1,1);
 
@@ -58,13 +58,13 @@ public class CicloDeVidaDelPedidoTest {
     }
 
     @Test
-    void test004_laTiendaNoPuedeAgregarStockNegativo(){
-        assertThrows(StockNegativoException.class,() -> tienda1.agregarStock(producto1,-1));
+    void test004_laSucursalNoPuedeAgregarStockNegativo(){
+        assertThrows(StockNegativoException.class,() -> sucursal1.agregarStock(producto1,-1));
     }
 
     @Test
     void test005_seAgrega3CantidadesDeUnProductoYSeQuitan2Cantidades() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 3);
         pedido1.quitarProducto(producto1, 2);
 
@@ -73,7 +73,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test006_seAgregan3CantidadesDeUnProductoYSeQuitan3Cantidades() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 3);
         pedido1.quitarProducto(producto1, 3);
 
@@ -87,15 +87,15 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test008_seIntentaQuitarMasCantidadesDeUnProductoQueLasQueSeAgregaronAlPedido() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 3);
         assertThrows(CantidadInsuficienteException.class,() -> pedido1.quitarProducto(producto1, 4));
     }
 
     @Test
     void test009_seCancelaUnPedidoEnBorrador() {
-        tienda1.agregarStock(producto1, 4);
-        tienda1.agregarStock(producto2, 4);
+        sucursal1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto2, 4);
         pedido1.agregarProducto(producto1, 3);
         pedido1.agregarProducto(producto2, 3);
         pedido1.cancelar();
@@ -105,49 +105,49 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test0010_seConfirmaElPedido() {
-        tienda1.agregarStock(producto1, 4);
-        tienda1.agregarStock(producto2,4);
+        sucursal1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto2,4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.agregarProducto(producto2, 2);
         pedido1.confirmar();
 
         assertInstanceOf(EstadoDePedidoConfirmado.class, pedido1.getEstadoActual());
-        assertEquals(2, tienda1.getStockDeProductos().get(producto1));
-        assertEquals(2, tienda1.getStockDeProductos().get(producto2));
+        assertEquals(2, sucursal1.getStockDeProductos().get(producto1));
+        assertEquals(2, sucursal1.getStockDeProductos().get(producto2));
     }
 
     @Test
     void test0011_seCancelaUnPedidoConfirmado() {
-        tienda1.agregarStock(producto1, 4);
-        tienda1.agregarStock(producto2, 4);
+        sucursal1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto2, 4);
         pedido1.agregarProducto(producto1, 3);
         pedido1.agregarProducto(producto2, 3);
         pedido1.confirmar();
         pedido1.cancelar();
 
         assertTrue(pedido1.getCarritoDeProductos().isEmpty());
-        assertEquals(4,tienda1.getStockDeProductos().get(producto1));
-        assertEquals(4,tienda1.getStockDeProductos().get(producto2));
+        assertEquals(4, sucursal1.getStockDeProductos().get(producto1));
+        assertEquals(4, sucursal1.getStockDeProductos().get(producto2));
     }
 
     @Test
     void test0012_seConfirmaYSePagaUnPedido() {
-        tienda1.agregarStock(producto1, 4);
-        tienda1.agregarStock(producto2,4);
+        sucursal1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto2,4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.agregarProducto(producto2, 2);
         pedido1.confirmar();
         pedido1.pagar();
 
         assertInstanceOf(EstadoPedidoEnPreparacion.class, pedido1.getEstadoActual());
-        assertEquals(2,tienda1.getStockDeProductos().get(producto1));
-        assertEquals(2,tienda1.getStockDeProductos().get(producto2));
+        assertEquals(2, sucursal1.getStockDeProductos().get(producto1));
+        assertEquals(2, sucursal1.getStockDeProductos().get(producto2));
     }
 
     @Test
     void test0013_seCancelaUnPedidoEnPreparacion() {
-        tienda1.agregarStock(producto1, 4);
-        tienda1.agregarStock(producto2,4);
+        sucursal1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto2,4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.agregarProducto(producto2, 2);
         pedido1.confirmar();
@@ -155,14 +155,14 @@ public class CicloDeVidaDelPedidoTest {
         pedido1.cancelar();
 
         assertInstanceOf(EstadoDePedidoCancelado.class, pedido1.getEstadoActual());
-        assertEquals(4,tienda1.getStockDeProductos().get(producto1));
-        assertEquals(4,tienda1.getStockDeProductos().get(producto2));
+        assertEquals(4, sucursal1.getStockDeProductos().get(producto1));
+        assertEquals(4, sucursal1.getStockDeProductos().get(producto2));
     }
 
     @Test
     void test0014_seEnviaElPedido() {
-        tienda1.agregarStock(producto1, 4);
-        tienda1.agregarStock(producto2,4);
+        sucursal1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto2,4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.agregarProducto(producto2, 2);
         pedido1.confirmar();
@@ -170,14 +170,14 @@ public class CicloDeVidaDelPedidoTest {
         pedido1.enviar();
 
         assertInstanceOf(EstadoDePedidoEnviado.class, pedido1.getEstadoActual());
-        assertEquals(2,tienda1.getStockDeProductos().get(producto1));
-        assertEquals(2,tienda1.getStockDeProductos().get(producto2));
+        assertEquals(2, sucursal1.getStockDeProductos().get(producto1));
+        assertEquals(2, sucursal1.getStockDeProductos().get(producto2));
     }
 
     @Test
     void test0015_seCancelaUnPedidoEnviado() {
-        tienda1.agregarStock(producto1, 4);
-        tienda1.agregarStock(producto2,4);
+        sucursal1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto2,4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.agregarProducto(producto2, 2);
         pedido1.confirmar();
@@ -186,14 +186,14 @@ public class CicloDeVidaDelPedidoTest {
         pedido1.cancelar();
 
         assertInstanceOf(EstadoDePedidoCancelado.class, pedido1.getEstadoActual());
-        assertEquals(4,tienda1.getStockDeProductos().get(producto1));
-        assertEquals(4,tienda1.getStockDeProductos().get(producto2));
+        assertEquals(4, sucursal1.getStockDeProductos().get(producto1));
+        assertEquals(4, sucursal1.getStockDeProductos().get(producto2));
     }
 
     @Test
     void test0016_seEntregaElPedido() {
-        tienda1.agregarStock(producto1, 4);
-        tienda1.agregarStock(producto2,4);
+        sucursal1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto2,4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.agregarProducto(producto2, 2);
         pedido1.confirmar();
@@ -223,7 +223,7 @@ public class CicloDeVidaDelPedidoTest {
     // EXCEPCIONES EN ESTADO: CONFIRMADO
     @Test
     void test0021a_confirmadoNoSeConfirmar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
 
@@ -232,7 +232,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test0020b_confirmadoNoSePuedeEnviar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
 
@@ -241,7 +241,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test0021_confirmadoNoSePuedeEntregar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
 
@@ -251,7 +251,7 @@ public class CicloDeVidaDelPedidoTest {
     //EXCEPCIONES EN ESTADO: EN PREPARACION
     @Test
     void test0022_enPreparacionNoSePuedeConfirmar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
         pedido1.pagar();
@@ -261,7 +261,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test0023_enPreparacionNoSePuedePagar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
         pedido1.pagar();
@@ -271,7 +271,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test0024_enPreparacionNoSePuedeEntregar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
         pedido1.pagar();
@@ -282,7 +282,7 @@ public class CicloDeVidaDelPedidoTest {
     // EXCEPCIONES EN ESTADO: ENVIADO
     @Test
     void test0025_enviadoNoSePuedeConfirmar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
         pedido1.pagar();
@@ -293,7 +293,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test0026_enviadoNoSePuedePagar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
         pedido1.pagar();
@@ -304,7 +304,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test0027_enviadoNoSePuedeEnviar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
         pedido1.pagar();
@@ -316,7 +316,7 @@ public class CicloDeVidaDelPedidoTest {
     //EXCEPCIONES EN ESTADO: ENTREGADO
     @Test
     void test0028_entregadoNoSePuedeConfirmar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
         pedido1.pagar();
@@ -328,7 +328,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test0029_entregadoNoSePuedeCancelar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
         pedido1.pagar();
@@ -340,7 +340,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test0030_entregadoNoSePuedePagar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
         pedido1.pagar();
@@ -352,7 +352,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test0031_entregadoNoSePuedeEnviar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
         pedido1.pagar();
@@ -364,7 +364,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test0032_entregadoNoSePuedeEntregar() {
-        tienda1.agregarStock(producto1, 4);
+        sucursal1.agregarStock(producto1, 4);
         pedido1.agregarProducto(producto1, 2);
         pedido1.confirmar();
         pedido1.pagar();

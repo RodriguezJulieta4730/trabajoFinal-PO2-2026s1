@@ -36,7 +36,7 @@ class ReportesTest {
         when(producto1.getNombre()).thenReturn("Auriculares Bluetooth");
         when(producto1.getPrecioFinal()).thenReturn(8000.0);
 
-        when(paquete1.getNombre()).thenReturn("Pack Audio Móvil");
+        when(paquete1.getNombre()).thenReturn("Pack Audio");
         when(paquete1.getPrecioFinal()).thenReturn(15000.0);
 
         Map<Producto, Integer> carrito1 = new HashMap<>();
@@ -79,7 +79,7 @@ class ReportesTest {
         assertEquals(8000.0, linea1.getPrecioPromedioCobrado());
 
         LineaDeReporte linea2 = reporte.getLineas().get(1);
-        assertEquals("Pack Audio Móvil", linea2.getNombre());
+        assertEquals("Pack Audio", linea2.getNombre());
         assertEquals(1, linea2.getCantidadVendida());
         assertEquals(15000.0, linea2.getPrecioPromedioCobrado());
         verify(pedido1, never()).getCarritoDeProductos();
@@ -89,20 +89,19 @@ class ReportesTest {
 
         String csv = reporte.exportar(new Csv());
         assertTrue(csv.contains("Auriculares Bluetooth,3,8000.0"));
-        assertTrue(csv.contains("Pack Audio Móvil,1,15000.0"));
+        assertTrue(csv.contains("Pack Audio,1,15000.0"));
     }
     @Test
     void test03_exportacionHtml(){
 
         String html = reporte.exportar(new Html());
         assertTrue(html.contains("<td>Auriculares Bluetooth</td><td>3</td><td>8000.0</td>"));
-        assertTrue(html.contains("<td>Pack Audio Móvil</td><td>1</td><td>15000.0</td>"));
+        assertTrue(html.contains("<td>Pack Audio</td><td>1</td><td>15000.0</td>"));
     }
     @Test
     void test04_exportacionTextoPlano(){
         String textoPlano = reporte.exportar(new TextoPlano());
         assertTrue(textoPlano.contains("Auriculares Bluetooth - Unidades: 3 - P.Promedio: $8000.0"));
-        assertTrue(textoPlano.contains("Pack Audio Móvil - Unidades: 1 - P.Promedio: $15000.0"));
-
+        assertTrue(textoPlano.contains("Pack Audio - Unidades: 1 - P.Promedio: $15000.0"));
     }
 }

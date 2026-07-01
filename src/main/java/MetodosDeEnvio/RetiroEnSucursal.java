@@ -11,7 +11,7 @@ public class RetiroEnSucursal implements MetodoDeEnvio{
 
     @Override
     public int estimarDiasEntrega(Pedido pedido) {
-        if (pedido.getTienda().tieneStockPara(pedido)) {
+        if (pedido.getSucursal().tieneStockPara(pedido)) {
             return 0; // retiro inmediato 0 días
         } else {
             return 3;

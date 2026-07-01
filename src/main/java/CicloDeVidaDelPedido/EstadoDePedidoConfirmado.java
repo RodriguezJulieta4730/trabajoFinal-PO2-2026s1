@@ -12,7 +12,7 @@ public class EstadoDePedidoConfirmado implements EstadoDePedido {
 
     @Override
     public void cancelar(Pedido pedido) {
-        pedido.getTienda().cancelarPedido(pedido.getCarritoDeProductos());
+        pedido.getSucursal().cancelarPedido(pedido.getCarritoDeProductos());
         pedido.borrarCarrito();
         pedido.setEstado(new EstadoDePedidoCancelado());
     }

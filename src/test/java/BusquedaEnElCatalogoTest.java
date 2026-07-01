@@ -528,7 +528,7 @@ public class BusquedaEnElCatalogoTest {
         assertTrue(resultado.contains(paquete1));
     }
 
-    // COMBINACIONES COMPUESTAS AVANZADAS CONJUNCION, DISYUNCION, NEGACION
+    // COMBINACIONES COMPUESTAS (CONJUNCION, DISYUNCION, NEGACION)
 
     @Test
     public void test29_filtroConjuncionAnidadoConNegacion() {

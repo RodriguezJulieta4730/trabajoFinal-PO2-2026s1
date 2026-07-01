@@ -31,7 +31,7 @@ public class ProductosTest {
     }
 
     @Test
-    void test002_ProductoIndividualConDescuentoCalculaPrecioFinalCorrectamente(){
+    void test002_ProductoIndividualConDescuentoCalculaPrecioFinalCorrecto(){
         assertEquals("Cable USB-C", producto1.getNombre());
         assertEquals("Samsung", producto1.getMarca());
         assertEquals(Electronica, producto1.getCategoria());
@@ -41,12 +41,12 @@ public class ProductosTest {
 
     // TESTS DE PAQUETES SIMPLES
 
-
     @Test
     void test003_PaqueteSinDescuentoConDosProductosSinDescuento(){
         Producto paquete1 = new Paquete(
                 "2CargadoresDeCelulares","cable cargador Samsung A15, cable cargador Samsung A35",producto1,producto3,Electronica);
         assertEquals(1600, paquete1.getPrecioFinal());
+        assertEquals(1600, paquete1.getPrecioBase());
     }
 
     @Test
@@ -188,18 +188,29 @@ public class ProductosTest {
     //  TESTS DE ATRIBUTOS EXTRA
 
     @Test
-    void test020_ProductoPermiteAsignarYRecuperarUnAtributoExtra(){
+    void test020_ProductoPermiteAsignarUnAtributoExtra(){
         producto1.setAtributoExtra("Alto", 1.9);
         assertEquals(1.9, producto1.getAtributoExtra("Alto"));
     }
 
     @Test
-    void test021_ProductoPermiteAsignarYRecuperarMultiplesAtributosExtras(){
+    void test021_ProductoPermiteAsignarAtributosExtras(){
         producto1.setAtributoExtra("Alto", 1.9);
         producto1.setAtributoExtra("Ancho", 1.9);
         producto1.setAtributoExtra("Peso", 5);
         assertEquals(1.9, producto1.getAtributoExtra("Alto"));
         assertEquals(1.9, producto1.getAtributoExtra("Ancho"));
         assertEquals(5, producto1.getAtributoExtra("Peso"));
+    }
+
+    @Test
+    void test022_ProductoIndividualRetornaPesoCeroSiNoTieneAtributoPeso() {
+        assertEquals(0.0f, producto1.getPeso());
+    }
+
+    @Test
+    void test023_ProductoIndividualRetornaPesoCorrectoCuandoSeLeAsigna() {
+        producto1.setAtributoExtra("peso", 150.0f);
+        assertEquals(150.0f, producto1.getPeso());
     }
 }

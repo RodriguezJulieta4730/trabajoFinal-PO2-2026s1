@@ -11,7 +11,7 @@ import static org.mockito.Mockito.*;
 public class NotificacionesDePedidoTest {
 
     private MailSender mockMailSender;
-    private Sucursal mockTienda;
+    private Sucursal mockSucursal;
     private Pedido pedido;
 
     private NotificadorDeEmail notificadorEmail;
@@ -22,9 +22,9 @@ public class NotificacionesDePedidoTest {
     @BeforeEach
     void setUp() {
         mockMailSender = mock(MailSender.class);
-        mockTienda = mock(Sucursal.class);
+        mockSucursal = mock(Sucursal.class);
         envioEstandar = new EnvioEstandar();
-        pedido = new Pedido(mockTienda, "boedo 671","Julieta@email.com",envioEstandar);
+        pedido = new Pedido(mockSucursal, "boedo 671","Julieta@email.com",envioEstandar);
 
         notificadorEmail = new NotificadorDeEmail(mockMailSender);
         generadorFactura = new GeneradorDeFactura();
@@ -35,7 +35,7 @@ public class NotificacionesDePedidoTest {
         pedido.getNotificador().agregarObservador(sistemaFidelizacion);
     }
 
-    // TESTS NOTIFICADOR DE EMAIL
+    // NOTIFICADOR DE EMAIL
     @Test
     void test01_notificadorEmailActuaAlPasarAEstadoConfirmado() {
         EstadoDePedido estadoConfirmado = new EstadoDePedidoConfirmado();
@@ -108,7 +108,7 @@ public class NotificacionesDePedidoTest {
         pedido.setEstado(estadoConfirmado);
     }
 
-    // TESTS SUBSISTEMA FIDELIZACION
+    // SUBSISTEMA FIDELIZACION
     @Test
     void test07_sistemaFidelizacionEnviaCuponDeDescuentoAlCancelarPedido() {
         EstadoDePedido estadoCancelado = new EstadoDePedidoCancelado();
@@ -137,7 +137,7 @@ public class NotificacionesDePedidoTest {
         );
     }
 
-    //TESTS CONTROL DEL NOTIFICADOR
+    // CONTROL DEL NOTIFICADOR
 
     @Test
     void test09_unObservadorRemovidoYaNoRecibeNotificaciones() {

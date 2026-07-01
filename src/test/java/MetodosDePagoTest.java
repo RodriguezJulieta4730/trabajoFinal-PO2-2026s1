@@ -63,8 +63,7 @@ public class MetodosDePagoTest {
         when(billeteraVirtualApi.notificarResultado()).thenReturn("Pago exitoso");
 
     }
-// Mockito inorder
-//TESTS TARJETA DE CRÉDITO
+    //TARJETA DE CRÉDITO
     @Test
     void test01_seRealizaUnPagoExitosoConTarjetaDeCredito() {
         String resultado = tarjetaDeCredito.pagar(pedido2.getPrecioTotal(), cliente1);
@@ -120,7 +119,7 @@ public class MetodosDePagoTest {
     }
 
 
-    //TESTS TRANSFERENCIA BANCARIA
+    //TRANSFERENCIA BANCARIA
     @Test
     void test01_seRealizaUnPagoExitosoConTransferenciaBancaria() {
         String resultado = transferenciaBancaria.pagar(pedido2.getPrecioTotal(), cliente1);
@@ -175,7 +174,7 @@ public class MetodosDePagoTest {
         verify(transferenciaApi, never()).notificarResultado();
     }
 
-    //TESTS BILLETERA VIRTUAL
+    // BILLETERA VIRTUAL
     @Test
     void test01_seRealizaUnPagoExitosoConBilleteraVirtual() {
         String resultado = billeteraVirtual.pagar(pedido2.getPrecioTotal(), cliente1);

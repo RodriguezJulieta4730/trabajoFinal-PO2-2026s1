@@ -13,8 +13,8 @@ public class EstadoDePedidoEnviado implements EstadoDePedido {
 
     @Override
     public void cancelar(Pedido pedido) {
-        pedido.getTienda().cancelarPedido(pedido.getCarritoDeProductos());
-        pedido.getTienda().reembolsarCostoProductos(pedido);
+        pedido.getSucursal().cancelarPedido(pedido.getCarritoDeProductos());
+        pedido.getSucursal().reembolsarCostoProductos(pedido);
         pedido.borrarCarrito();
         pedido.setEstado(new EstadoDePedidoCancelado());
     }

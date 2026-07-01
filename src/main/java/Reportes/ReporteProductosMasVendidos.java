@@ -29,8 +29,6 @@ public class ReporteProductosMasVendidos implements TipoDeReporte {
                 recaudacionTotal.put(nombre, recaudacionTotal.getOrDefault(nombre, 0.0) + totalCobrado);
             });
         }
-
-        // Armamos las líneas del reporte ordenadas de mayor a menor venta utilizando getCantidadVendida()
         lineas = cantidades.entrySet().stream()
                 .map(entry -> {
                     String nombre = entry.getKey();
@@ -45,8 +43,6 @@ public class ReporteProductosMasVendidos implements TipoDeReporte {
     public List<LineaDeReporte> getLineas() {
         return lineas;
     }
-
-    // El método del patrón Visitor usando tu interfaz real
     public String exportar(FormatoDeExportacionDeReporte visitor) {
         return visitor.exportar(this);
     }

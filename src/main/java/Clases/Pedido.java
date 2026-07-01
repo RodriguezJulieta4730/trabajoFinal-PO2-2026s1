@@ -17,7 +17,7 @@ import java.util.Map;
 public class Pedido {
     Map<Producto, Integer> carritoDeProductos;
     EstadoDePedido estadoActual;
-    private final Sucursal tienda;
+    private final Sucursal sucursal;
     private final String direccion;
     private final Notificador notificador;
     private final String email;
@@ -25,7 +25,7 @@ public class Pedido {
     private final LocalDate fecha;
 
     public Pedido(Sucursal tienda, String direccion, String email, MetodoDeEnvio metodoDeEnvio) {
-        this.tienda = tienda;
+        this.sucursal = tienda;
         this.fecha = LocalDate.now();
         this.carritoDeProductos = new HashMap<>();
         this.estadoActual = new EstadoDePedidoBorrador();
@@ -60,12 +60,12 @@ public class Pedido {
 
     public void entregar() {
         estadoActual.entregar(this);
-        tienda.registarPedidoEnHistorial(this);
+        sucursal.registarPedidoEnHistorial(this);
     }
 
 
     public void agregarProducto(Producto producto, int cantProducto) {
-        if (tienda.tieneStock(producto, cantProducto)) {
+        if (sucursal.tieneStock(producto, cantProducto)) {
             carritoDeProductos.put(producto, carritoDeProductos.getOrDefault(producto,0) + cantProducto);
         } else {
             throw new NoHayStockException("No hay suficiente stock");
