@@ -23,8 +23,9 @@ public class Pedido {
     private final String email;
     private final MetodoDeEnvio metodoDeEnvio;
     private final LocalDate fecha;
+    private final Cliente cliente;
 
-    public Pedido(Sucursal tienda, String direccion, String email, MetodoDeEnvio metodoDeEnvio) {
+    public Pedido(Sucursal tienda, String direccion, String email, MetodoDeEnvio metodoDeEnvio,Cliente cliente) {
         this.sucursal = tienda;
         this.fecha = LocalDate.now();
         this.carritoDeProductos = new HashMap<>();
@@ -33,6 +34,7 @@ public class Pedido {
         this.direccion=direccion;
         this.email=email;
         this.metodoDeEnvio=metodoDeEnvio;
+        this.cliente = cliente;
     }
 
     public void setEstado(EstadoDePedido nuevoEstado) {

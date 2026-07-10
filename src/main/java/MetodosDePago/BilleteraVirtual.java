@@ -10,22 +10,22 @@ public class BilleteraVirtual extends MedioDePago {
     }
 
     @Override
-    boolean validarDatos(double montoAPagar,Cliente cliente) {
+    public boolean validarDatos(double montoAPagar,Cliente cliente) {
         return billeteraVirtualApi.validarDatos(montoAPagar,cliente.getCbu(),cliente.getAlias());
-    } // aclarar en informe toma de decision de pasar monto a pagar,cbu y alias
-
-    @Override
-    boolean reservarFondos(double montoAPagar, Cliente cliente) {
-        return billeteraVirtualApi.reservarFondos(montoAPagar,cliente.getCbu(),cliente.getAlias());
     }
 
     @Override
-    boolean ejecutarTransaccion(double montoAPagar, Cliente cliente) {
+    public boolean reservarFondos(double montoAPagar, Cliente cliente) {
+        return billeteraVirtualApi.reservarFondos(montoAPagar, cliente.getCbu(), cliente.getAlias());
+    }
+
+    @Override
+    public boolean ejecutarTransaccion(double montoAPagar, Cliente cliente) {
         return billeteraVirtualApi.ejecutarTransaccion(montoAPagar);
     }
 
     @Override
-    String notificarResultado() {
-        return billeteraVirtualApi.notificarResultado();
+    public String notificarResultado(Cliente cliente){
+        return billeteraVirtualApi.notificarResultado(cliente.getAlias());
     }
 }

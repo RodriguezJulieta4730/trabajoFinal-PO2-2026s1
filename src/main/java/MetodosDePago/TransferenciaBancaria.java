@@ -15,17 +15,18 @@ public class TransferenciaBancaria extends MedioDePago {
     }
 
     @Override
-    boolean reservarFondos(double montoAPagar, Cliente cliente) {
-        return transferenciaApi.reservarFondos(montoAPagar, cliente.getCbu(), cliente.getAlias());
-    }
+    public boolean reservarFondos(double montoAPagar, Cliente cliente) {
+        return true;
+    } // la transferencia es directa
 
     @Override
-    boolean ejecutarTransaccion(double montoAPagar, Cliente cliente) {
+    public boolean ejecutarTransaccion(double montoAPagar, Cliente cliente) {
         return transferenciaApi.ejecutarTransaccion(montoAPagar, cliente.getCbu(), cliente.getAlias());
     }
 
     @Override
-    String notificarResultado() {
-        return transferenciaApi.notificarResultado();
+    public String notificarResultado(Cliente cliente) {
+        return  "Pago exitoso mediante Transferencia Bancaria para el alias: " + cliente.getAlias()
+                + " (CBU: " + cliente.getCbu() + ")";
     }
 }

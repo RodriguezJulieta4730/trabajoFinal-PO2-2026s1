@@ -13,7 +13,7 @@ public class NotificacionesDePedidoTest {
     private MailSender mockMailSender;
     private Sucursal mockSucursal;
     private Pedido pedido;
-
+    private Cliente cliente1;
     private NotificadorDeEmail notificadorEmail;
     private GeneradorDeFactura generadorFactura;
     private Fidelizacion sistemaFidelizacion;
@@ -23,8 +23,9 @@ public class NotificacionesDePedidoTest {
     void setUp() {
         mockMailSender = mock(MailSender.class);
         mockSucursal = mock(Sucursal.class);
+        cliente1 = mock(Cliente.class);
         envioEstandar = new EnvioEstandar();
-        pedido = new Pedido(mockSucursal, "boedo 671","Julieta@email.com",envioEstandar);
+        pedido = new Pedido(mockSucursal, "boedo 671","Julieta@email.com",envioEstandar,cliente1);
 
         notificadorEmail = new NotificadorDeEmail(mockMailSender);
         generadorFactura = new GeneradorDeFactura();
@@ -92,7 +93,7 @@ public class NotificacionesDePedidoTest {
         );
     }
 
-    // TESTS GENERADOR DE FACTURA
+    //  GENERADOR DE FACTURA
     @Test
     void test05_generadorFacturaCreaComprobanteSoloAlAlcanzarEstadoEntregado() {
         EstadoDePedido estadoEntregado = new EstadoDePedidoEntregado();

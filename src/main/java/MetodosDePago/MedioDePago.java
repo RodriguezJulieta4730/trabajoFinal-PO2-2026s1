@@ -13,14 +13,14 @@ public abstract class MedioDePago {
         if(!ejecutarTransaccion(montoAPagar,cliente)){
             return "No se pudo ejecutar la transacción";
         }
-        return notificarResultado();
+        return notificarResultado(cliente);
     }
 
-    abstract boolean validarDatos(double montoAPagar,Cliente cliente);
+     public abstract boolean validarDatos(double montoAPagar,Cliente cliente);
 
-    abstract boolean reservarFondos(double montoAPagar, Cliente cliente);
+     public abstract boolean reservarFondos(double montoAPagar, Cliente cliente);
 
-    abstract boolean ejecutarTransaccion(double montoAPagar, Cliente cliente);
+     public abstract boolean ejecutarTransaccion(double montoAPagar, Cliente cliente);
 
-    abstract String notificarResultado();
+     public abstract String notificarResultado(Cliente cliente);
 }

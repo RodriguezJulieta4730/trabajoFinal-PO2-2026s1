@@ -17,12 +17,14 @@ public class CicloDeVidaDelPedidoTest {
     ProductoIndividual producto2;
     ProductoIndividual producto3;
     MetodoDeEnvio envioEstandar;
+    Cliente cliente1;
 
     @BeforeEach
     void setUp(){
         envioEstandar = new EnvioEstandar();
         sucursal1 = new Sucursal();
-        pedido1 = new Pedido(sucursal1, "Boedo 671","Julieta@email.com",envioEstandar);
+        cliente1 = mock(Cliente.class);
+        pedido1 = new Pedido(sucursal1, "Boedo 671","Julieta@email.com",envioEstandar,cliente1);
         producto1 = mock(ProductoIndividual.class);
         producto2 = mock(ProductoIndividual.class);
         producto3 = mock(ProductoIndividual.class);
