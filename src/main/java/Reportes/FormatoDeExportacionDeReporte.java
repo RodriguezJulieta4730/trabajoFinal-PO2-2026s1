@@ -1,5 +1,5 @@
 package Reportes;
 
 public interface FormatoDeExportacionDeReporte {
-    String exportar(ReporteProductosMasVendidos reporte);
+    String visit(ReporteProductosMasVendidos reporte);
 }

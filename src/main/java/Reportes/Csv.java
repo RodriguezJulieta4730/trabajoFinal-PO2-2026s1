@@ -2,7 +2,7 @@ package Reportes;
 
 public class Csv implements FormatoDeExportacionDeReporte {
     @Override
-    public String exportar(ReporteProductosMasVendidos reporte) {
+    public String visit(ReporteProductosMasVendidos reporte) {
         StringBuilder sb = new StringBuilder();
         sb.append("Producto,Cantidad Vendida,Precio Promedio\n");
         for (LineaDeReporte linea : reporte.getLineas()) {

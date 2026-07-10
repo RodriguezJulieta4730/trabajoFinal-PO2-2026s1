@@ -2,6 +2,7 @@ package CicloDeVidaDelPedido;
 
 import Clases.Pedido;
 import Excepciones.operacionInvalidaExeption;
+import NotificacionesDelPedido.NotificadorDeEmail;
 
 public class EstadoDePedidoConfirmado implements EstadoDePedido {
 
@@ -34,4 +35,15 @@ public class EstadoDePedidoConfirmado implements EstadoDePedido {
 
     }
 
+    @Override
+    public void notificarMail(Pedido pedido, NotificadorDeEmail notificadorDeEmail) {
+        notificadorDeEmail.getMailSender().enviarMail(
+                pedido.getEmail(),
+                "Actualización de tu Pedido",
+                "Tu pedido cambió al estado: " + this,
+                null
+        );
+    }
 }
+
+

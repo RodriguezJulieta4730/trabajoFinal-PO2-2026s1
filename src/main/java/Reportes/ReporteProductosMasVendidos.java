@@ -44,6 +44,6 @@ public class ReporteProductosMasVendidos implements TipoDeReporte {
         return lineas;
     }
     public String exportar(FormatoDeExportacionDeReporte visitor) {
-        return visitor.exportar(this);
+        return visitor.visit(this);
     }
 }

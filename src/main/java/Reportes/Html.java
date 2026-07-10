@@ -2,7 +2,7 @@ package Reportes;
 
 public class Html implements FormatoDeExportacionDeReporte {
     @Override
-    public String exportar(ReporteProductosMasVendidos reporte) {
+    public String visit(ReporteProductosMasVendidos reporte) {
         StringBuilder sb = new StringBuilder();
         sb.append("<table>\n<thead>\n<tr><th>Producto</th><th>Vendidos</th><th>Precio Promedio</th></tr>\n</thead>\n<tbody>\n");
         for (LineaDeReporte linea : reporte.getLineas()) {

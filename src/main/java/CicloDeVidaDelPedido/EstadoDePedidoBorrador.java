@@ -2,6 +2,7 @@ package CicloDeVidaDelPedido;
 
 import Clases.Pedido;
 import Excepciones.operacionInvalidaExeption;
+import NotificacionesDelPedido.NotificadorDeEmail;
 
 public class EstadoDePedidoBorrador implements EstadoDePedido{
 
@@ -31,6 +32,11 @@ public class EstadoDePedidoBorrador implements EstadoDePedido{
     @Override
     public void entregar(Pedido pedido) {
         throw  new operacionInvalidaExeption("el pedido no esta enviado");
+
+    }
+
+    @Override
+    public void notificarMail(Pedido pedido, NotificadorDeEmail notificadorDeEmail) {
 
     }
 
