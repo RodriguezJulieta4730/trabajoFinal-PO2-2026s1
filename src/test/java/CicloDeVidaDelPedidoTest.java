@@ -23,8 +23,8 @@ public class CicloDeVidaDelPedidoTest {
     void setUp(){
         envioEstandar = new EnvioEstandar();
         sucursal1 = new Sucursal();
-        cliente1 = mock(Cliente.class);
-        pedido1 = new Pedido(sucursal1, "Boedo 671","Julieta@email.com",envioEstandar,cliente1);
+        cliente1 = new Cliente("JulietaRodriguez", 20304050607L, "juli@email.com", "Boedo 671");
+        pedido1 = new Pedido(sucursal1, envioEstandar, cliente1);
         producto1 = mock(ProductoIndividual.class);
         producto2 = mock(ProductoIndividual.class);
         producto3 = mock(ProductoIndividual.class);

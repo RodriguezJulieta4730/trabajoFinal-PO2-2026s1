@@ -23,9 +23,12 @@ public class NotificacionesDePedidoTest {
     void setUp() {
         mockMailSender = mock(MailSender.class);
         mockSucursal = mock(Sucursal.class);
+
         cliente1 = mock(Cliente.class);
+        when(cliente1.getEmail()).thenReturn("Julieta@email.com");
+
         envioEstandar = new EnvioEstandar();
-        pedido = new Pedido(mockSucursal, "boedo 671","Julieta@email.com",envioEstandar,cliente1);
+        pedido = new Pedido(mockSucursal,envioEstandar,cliente1);
 
         notificadorEmail = new NotificadorDeEmail(mockMailSender);
         generadorFactura = new GeneradorDeFactura();

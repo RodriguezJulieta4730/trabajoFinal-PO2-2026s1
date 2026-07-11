@@ -18,21 +18,17 @@ public class Pedido {
     Map<Producto, Integer> carritoDeProductos;
     EstadoDePedido estadoActual;
     private final Sucursal sucursal;
-    private final String direccion;
     private final Notificador notificador;
-    private final String email;
     private final MetodoDeEnvio metodoDeEnvio;
     private final LocalDate fecha;
     private final Cliente cliente;
 
-    public Pedido(Sucursal tienda, String direccion, String email, MetodoDeEnvio metodoDeEnvio,Cliente cliente) {
+    public Pedido(Sucursal tienda, MetodoDeEnvio metodoDeEnvio,Cliente cliente) {
         this.sucursal = tienda;
         this.fecha = LocalDate.now();
         this.carritoDeProductos = new HashMap<>();
         this.estadoActual = new EstadoDePedidoBorrador();
         this.notificador = new Notificador();
-        this.direccion=direccion;
-        this.email=email;
         this.metodoDeEnvio=metodoDeEnvio;
         this.cliente = cliente;
     }
@@ -93,11 +89,11 @@ public class Pedido {
     }
 
     public void reembolsarCostoProductos() {
-        System.out.println("Nota de Crédito generada: Se reembolsaron $" + this.getPrecioTotal() + " por los productos del pedido a " + this.getEmail());
+        System.out.println("Nota de Crédito generada: Se reembolsaron $" + this.getPrecioTotal() + " por los productos del pedido a " + this.cliente.getEmail());
     }
 
     public void reembolsarEnvio() {
-        System.out.println("Nota de Crédito generada: Se reembolsaron $" + metodoDeEnvio.calcularCosto(this) + " por el costo de envío a " + this.getEmail());
+        System.out.println("Nota de Crédito generada: Se reembolsaron $" + metodoDeEnvio.calcularCosto(this) + " por el costo de envío a " + this.cliente.getEmail());
     }
 
     public void borrarCarrito() {
@@ -106,8 +102,8 @@ public class Pedido {
 
     public double getPrecioTotal() {
         double precioTotal = 0;
-        for(Producto p: carritoDeProductos.keySet()){
-            precioTotal += p.getPrecioFinal();
+        for (Map.Entry<Producto, Integer> entry : carritoDeProductos.entrySet()) {
+            precioTotal += entry.getKey().getPrecioFinal() * entry.getValue();
         }
         return precioTotal;
     }

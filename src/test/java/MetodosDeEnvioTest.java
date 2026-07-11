@@ -1,3 +1,4 @@
+import Clases.Cliente;
 import Clases.Pedido;
 import Clases.Sucursal;
 import Excepciones.PesoInvalidoException;
@@ -33,9 +34,12 @@ public class MetodosDeEnvioTest {
         envioExpress = new EnvioExpress();
         retiroEnSucursal = new RetiroEnSucursal();
 
+        Cliente cliente1 = mock(Cliente.class);
+
         pedido1 = mock(Pedido.class);
         when(pedido1.getPeso()).thenReturn(1.0F);
-        when(pedido1.getDireccion()).thenReturn("Boedo 671");
+        when(pedido1.getCliente()).thenReturn(cliente1);
+        when(pedido1.getCliente().getDireccion()).thenReturn("Boedo 671");
 
         pedido2 = mock(Pedido.class);
         when(pedido2.getPrecioTotal()).thenReturn(1000.0);
@@ -52,7 +56,8 @@ public class MetodosDeEnvioTest {
 
         pedido5 = mock(Pedido.class);
         when(pedido5.getPeso()).thenReturn(-1.0F);
-        when(pedido5.getDireccion()).thenReturn("Boedo 671");
+        when(pedido5.getCliente()).thenReturn(cliente1);
+        when(pedido5.getCliente().getDireccion()).thenReturn("Boedo 671");
     }
 
     @Test

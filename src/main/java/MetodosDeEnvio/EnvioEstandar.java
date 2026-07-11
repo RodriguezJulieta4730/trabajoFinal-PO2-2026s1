@@ -6,7 +6,7 @@ public class EnvioEstandar implements MetodoDeEnvio{
 
     @Override
     public float calcularCosto(Pedido pedido) {
-        return CorreoArgentina.estimarEnvio(pedido.getPeso(), pedido.getDireccion());
+        return CorreoArgentina.estimarEnvio(pedido.getPeso(), pedido.getCliente().getDireccion());
     }
 
     @Override

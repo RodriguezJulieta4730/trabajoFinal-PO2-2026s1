@@ -3,7 +3,7 @@ package MetodosDeEnvio;
 import Excepciones.PesoInvalidoException;
 
 public class CorreoArgentina {
-    public static float estimarEnvio(float peso, String ignoredDireccionEnvio) {
+    public static float estimarEnvio(float peso, String direccionEnvio) {
         if (peso <= 0) {
             throw new PesoInvalidoException("El peso debe ser positivo");
         }
