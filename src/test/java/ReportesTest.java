@@ -1,8 +1,4 @@
-import Clases.Paquete;
-import Clases.Pedido;
-import Clases.Producto;
-import Clases.ProductoIndividual;
-import Clases.Sucursal;
+import Clases.*;
 import Reportes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +15,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReportesTest {
-
+    private UNQShop tienda;
     private Sucursal sucursal;
     private ReporteProductosMasVendidos reporte;
     @Mock private Pedido pedido1;
@@ -31,7 +27,9 @@ class ReportesTest {
 
     @BeforeEach
     void setUp() {
-        sucursal = new Sucursal();
+        tienda = new UNQShop();
+        sucursal = new Sucursal(tienda,"Roque Sáenz Peña 352");
+        tienda.registrarSucursal(sucursal);
 
         when(producto1.getNombre()).thenReturn("Auriculares Bluetooth");
         when(producto1.getPrecioFinal()).thenReturn(8000.0);

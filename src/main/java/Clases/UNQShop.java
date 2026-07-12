@@ -1,0 +1,77 @@
+package Clases;
+
+import BusquedaEnElCatalogo.CriterioDeBusqueda;
+import Excepciones.StockNegativoException;
+import Excepciones.TiendaInvalidaException;
+import lombok.Getter;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Getter
+public class UNQShop {
+    private final List<Sucursal> sucursales = new ArrayList<>();
+    private final Set<Producto> catalogoDeProductos = new HashSet<>();
+
+    public void registrarSucursal(Sucursal sucursal) {
+        if (sucursal == null || !sucursal.getTienda().equals(this)) {
+            throw new TiendaInvalidaException("No se puede registrar una sucursal que no pertenece a esta tienda.");
+        }
+        this.sucursales.add(sucursal);
+    }
+
+    /**
+     * Intenta procesar un pedido para una sucursal destino.
+     * Si no hay stock local, busca en las otras sucursales para realizar un traslado interno.
+     */
+    public void procesarPedido(Pedido pedido, Sucursal sucursalDestino) {
+        Map<Producto, Integer> productosDelPedido = pedido.getCarritoDeProductos(); // El mapa de productos y cantidades
+
+        for (Map.Entry<Producto, Integer> entry : productosDelPedido.entrySet()) {
+            Producto producto = entry.getKey();
+            int cantidadRequerida = entry.getValue();
+
+            //  La sucursal elegida tiene stock de este producto
+            if (sucursalDestino.tieneStock(producto, cantidadRequerida)) {
+                sucursalDestino.decrementarStock(Map.of(producto, cantidadRequerida));
+            }
+            //  No hay stock local, buscamos en el resto de la empresa
+            else {
+                Optional<Sucursal> sucursalOrigen = buscarSucursalConStock(producto, cantidadRequerida, sucursalDestino);
+
+                if (sucursalOrigen.isPresent()) {
+                    Sucursal origen = sucursalOrigen.get();
+
+                    // Hacemos el traslado interno:
+                    origen.decrementarStock(Map.of(producto, cantidadRequerida));      // Sale de la sucursal que presta
+                    sucursalDestino.agregarStock(producto, cantidadRequerida);         // Entra temporalmente a la destino
+                    sucursalDestino.decrementarStock(Map.of(producto, cantidadRequerida)); // Se consume para el pedido
+
+                    System.out.println("Traslado interno exitoso de " + producto.getNombre() + " desde " + origen.getDireccion());
+                } else {
+                    // Ninguna sucursal de toda la tienda tiene stock suficiente
+                    throw new StockNegativoException("No hay stock suficiente de " + producto.getNombre() + " en ninguna sucursal de la tienda.");
+                }
+            }
+        }
+
+        // Si todo salió bien y no saltó excepción, se guarda en el historial de la sucursal
+        sucursalDestino.getHistorialPedidos().add(pedido);
+    }
+
+    /**
+     * Busca qué OTRA sucursal tiene stock de un producto específico.
+     */
+    private Optional<Sucursal> buscarSucursalConStock(Producto producto, int cantidad, Sucursal sucursalActual) {
+        return sucursales.stream()
+                .filter(s -> !s.equals(sucursalActual)) // Excluimos la sucursal que ya sabemos que no tiene stock
+                .filter(s -> s.tieneStock(producto, cantidad))
+                .findFirst(); // Retorna la primera que cumpla
+    }
+
+    public List<Producto> filtrar(CriterioDeBusqueda criterio) {
+        return catalogoDeProductos.stream()
+                .filter(criterio::cumpleCondicion)
+                .collect(Collectors.toList());
+    }
+}

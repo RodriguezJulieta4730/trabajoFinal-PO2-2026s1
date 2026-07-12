@@ -6,11 +6,14 @@ import MetodosDeEnvio.MetodoDeEnvio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class CicloDeVidaDelPedidoTest {
+    private UNQShop tienda;
     Producto producto1;
     Sucursal sucursal1;
     Pedido pedido1;
@@ -21,8 +24,10 @@ public class CicloDeVidaDelPedidoTest {
 
     @BeforeEach
     void setUp(){
+        tienda = new UNQShop();
         envioEstandar = new EnvioEstandar();
-        sucursal1 = new Sucursal();
+        sucursal1 = new Sucursal(tienda,"Roque Sáenz Peña 352");
+        tienda.registrarSucursal(sucursal1);
         cliente1 = new Cliente("JulietaRodriguez", 20304050607L, "juli@email.com", "Boedo 671");
         pedido1 = new Pedido(sucursal1, envioEstandar, cliente1);
         producto1 = mock(ProductoIndividual.class);
@@ -56,6 +61,9 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test003_seIntentaAgregarUnProductoSinStock(){
+        assertThrows(ProductoNoEncontradoException.class,() -> pedido1.agregarProducto(producto1,1));
+        sucursal1.agregarStock(producto1,1);
+        sucursal1.decrementarStock(Map.of(producto1,1));
         assertThrows(NoHayStockException.class,() -> pedido1.agregarProducto(producto1,1));
     }
 
@@ -84,7 +92,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @Test
     void test007_seIntentaQuitarUnProductoQueNuncaSeAgregoAlPedido() {
-        assertThrows(NoHayProductoEnPedidoException.class,() -> pedido1.quitarProducto(producto1, 3));
+        assertThrows(ProductoNoEncontradoException.class,() -> pedido1.quitarProducto(producto1, 3));
     }
 
     @Test

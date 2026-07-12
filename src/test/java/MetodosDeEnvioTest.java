@@ -1,6 +1,4 @@
-import Clases.Cliente;
-import Clases.Pedido;
-import Clases.Sucursal;
+import Clases.*;
 import Excepciones.PesoInvalidoException;
 import MetodosDeEnvio.EnvioEstandar;
 import MetodosDeEnvio.EnvioExpress;
@@ -27,13 +25,14 @@ public class MetodosDeEnvioTest {
     MetodoDeEnvio envioEstandar;
     MetodoDeEnvio envioExpress;
     MetodoDeEnvio retiroEnSucursal;
+    UNQShop tienda;
 
     @BeforeEach
     void setUp() {
         envioEstandar = new EnvioEstandar();
         envioExpress = new EnvioExpress();
         retiroEnSucursal = new RetiroEnSucursal();
-
+        tienda  = mock(UNQShop.class);
         Cliente cliente1 = mock(Cliente.class);
 
         pedido1 = mock(Pedido.class);
@@ -50,9 +49,6 @@ public class MetodosDeEnvioTest {
         when(sucursal2.tieneStockPara(pedido3)).thenReturn(true);
 
         pedido4 = mock(Pedido.class);
-        sucursal1 = mock(Sucursal.class);
-        when(pedido4.getSucursal()).thenReturn(sucursal1);
-        when(sucursal1.tieneStockPara(pedido4)).thenReturn(false);
 
         pedido5 = mock(Pedido.class);
         when(pedido5.getPeso()).thenReturn(-1.0F);
@@ -80,8 +76,26 @@ public class MetodosDeEnvioTest {
 
     @Test
     void test0004_retiroEnSucursalSinStock() {
+        UNQShop tiendaReal = new UNQShop();
+        Sucursal sucursalBernal = new Sucursal(tiendaReal, "Roque Sáenz Peña 352");
+        Sucursal sucursalQuilmes = new Sucursal(tiendaReal, "Rivadavia 123");
+
+        tiendaReal.registrarSucursal(sucursalBernal);
+        tiendaReal.registrarSucursal(sucursalQuilmes);
+
+        Cliente cliente= mock(Cliente.class);
+        Producto producto = mock(Producto.class);
+
+        sucursalQuilmes.agregarStock(producto, 5);
+
+        Pedido pedidoReal = new Pedido(sucursalBernal, retiroEnSucursal, cliente);
+        pedidoReal.agregarProducto(producto, 1);
+
+
+        int diasEstimados = retiroEnSucursal.estimarDiasEntrega(pedidoReal);
+
+        assertEquals(3, diasEstimados);
         assertEquals(0, retiroEnSucursal.calcularCosto(pedido4));
-        assertEquals(3, retiroEnSucursal.estimarDiasEntrega(pedido4));
     }
 
     @Test

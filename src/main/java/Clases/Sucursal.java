@@ -10,12 +10,18 @@ import java.util.stream.Collectors;
 
 @Getter
 public class Sucursal {
+    private final UNQShop tienda;
+    private final String direccion;
     private final Map<Producto,Integer> stockDeProductos = new HashMap<>();
-    private final Set<Producto> catalogoDeProductos = new HashSet<>();
     private final List<Pedido> historialPedidos = new ArrayList<>();
 
+    public Sucursal(UNQShop tienda,String direccion) {
+        this.tienda=tienda;
+        this.direccion = direccion;
+    }
+
     public void agregarStock(Producto producto, int stock) {
-        catalogoDeProductos.add(producto);
+        tienda.getCatalogoDeProductos().add(producto);
         if(stock>0){
             int stockActual = stockDeProductos.getOrDefault(producto, 0);
             stockDeProductos.put(producto, stockActual + stock);
@@ -55,10 +61,6 @@ public class Sucursal {
                 .allMatch(entry -> this.tieneStock(entry.getKey(), entry.getValue()));
     }
 
-    public List<Producto> filtrar(CriterioDeBusqueda criterioDeBusqueda){
-        return catalogoDeProductos.stream().filter(criterioDeBusqueda::cumpleCondicion).collect(Collectors.toList());
-    }
-
     public void registarPedidoEnHistorial(Pedido pedido) {
         historialPedidos.add(pedido);
     }
@@ -69,6 +71,7 @@ public class Sucursal {
         validarStock(productos);
         descontarStock(productos);
         Paquete nuevoPaquete = new Paquete(nombre, descripcion, categoria, productos);
+        tienda.getCatalogoDeProductos().add(nuevoPaquete);
         this.agregarStock(nuevoPaquete,1);
     }
 
@@ -102,7 +105,7 @@ public class Sucursal {
     }
 
     public void aplicarDescuentoAProducto(ProductoIndividual producto, double nuevoDescuento) {
-        if (!catalogoDeProductos.contains(producto)) {
+        if (!tienda.getCatalogoDeProductos().contains(producto)) {
             throw new ProductoNoEncontradoException("El producto " + producto.getNombre() + " no pertenece al catálogo de esta sucursal");
         }
         producto.setDescuento(nuevoDescuento);

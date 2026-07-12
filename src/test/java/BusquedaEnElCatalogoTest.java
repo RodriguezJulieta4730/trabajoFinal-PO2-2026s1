@@ -11,7 +11,7 @@ import static Clases.Categoria.Indumentaria;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BusquedaEnElCatalogoTest {
-
+    private UNQShop tienda;
     private Sucursal sucursal;
     private ProductoIndividual producto1;
     private ProductoIndividual producto2;
@@ -21,7 +21,9 @@ public class BusquedaEnElCatalogoTest {
 
     @BeforeEach
     public void setUp() {
-        sucursal = new Sucursal();
+        tienda = new UNQShop();
+        sucursal = new Sucursal(tienda,"Roque Sáenz Peña 352");
+        tienda.registrarSucursal(sucursal);
 
         producto1 = new ProductoIndividual(
                 "E0123", "Celular Samsung ", "Celular con buena cámara",
@@ -48,7 +50,7 @@ public class BusquedaEnElCatalogoTest {
         sucursal.agregarStock(producto3, 5);
         sucursal.agregarStock(producto2, 1);
         sucursal.agregarStock(paquete1, 3);
-        sucursal.getCatalogoDeProductos().add(producto4);
+        tienda.getCatalogoDeProductos().add(producto4);
     }
 
     // CRITERIOS SIMPLES
@@ -56,7 +58,7 @@ public class BusquedaEnElCatalogoTest {
     @Test
     public void test01_criterioSimple_PorNombre() {
         CriterioDeBusqueda criterioPorNombre = new CriterioPorNombre("cElUlAr");
-        List<Producto> resultado = sucursal.filtrar(criterioPorNombre);
+        List<Producto> resultado = tienda.filtrar(criterioPorNombre);
 
         assertEquals(2, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -70,7 +72,7 @@ public class BusquedaEnElCatalogoTest {
     @Test
     public void test02_criterioSimple_PorPrecioMaximo() {
         CriterioDeBusqueda criterioPrecioMaximo = new CriterioPrecioMaximo(4000);
-        List<Producto> resultado = sucursal.filtrar(criterioPrecioMaximo);
+        List<Producto> resultado = tienda.filtrar(criterioPrecioMaximo);
 
         assertEquals(3, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -84,7 +86,7 @@ public class BusquedaEnElCatalogoTest {
     @Test
     public void test03_filtroPorCategoria() {
         CriterioDeBusqueda criterioPorCategoria = new CriterioPorCategoria(Electronica);
-        List<Producto> resultado = sucursal.filtrar(criterioPorCategoria);
+        List<Producto> resultado = tienda.filtrar(criterioPorCategoria);
 
         assertEquals(3, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -97,8 +99,8 @@ public class BusquedaEnElCatalogoTest {
 
     @Test
     public void test04_filtroPorDisponibilidad() {
-        CriterioDeBusqueda criterioPorDisponibilidad = new CriterioPorDisponibilidad(sucursal);
-        List<Producto> resultado = sucursal.filtrar(criterioPorDisponibilidad);
+        CriterioDeBusqueda criterioPorDisponibilidad = new CriterioPorDisponibilidad(tienda);
+        List<Producto> resultado = tienda.filtrar(criterioPorDisponibilidad);
 
         assertEquals(4, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -115,7 +117,7 @@ public class BusquedaEnElCatalogoTest {
     public void test05_filtroNegacionDeFiltroNombre() {
         CriterioDeBusqueda criterioNombre = new CriterioPorNombre("Samsung");
         CriterioDeBusqueda criterioNegacionNombre = new CriterioNegacion(criterioNombre);
-        List<Producto> resultado = sucursal.filtrar(criterioNegacionNombre);
+        List<Producto> resultado = tienda.filtrar(criterioNegacionNombre);
 
         assertEquals(2, resultado.size());
         assertTrue(resultado.contains(producto3));
@@ -130,7 +132,7 @@ public class BusquedaEnElCatalogoTest {
     public void test06_filtroNegacionDeFiltroPrecioMaximo() {
         CriterioDeBusqueda criterioPrecio = new CriterioPrecioMaximo(2000);
         CriterioDeBusqueda criterioNegacionPrecio = new CriterioNegacion(criterioPrecio);
-        List<Producto> resultado = sucursal.filtrar(criterioNegacionPrecio);
+        List<Producto> resultado = tienda.filtrar(criterioNegacionPrecio);
 
         assertEquals(3, resultado.size());
         assertTrue(resultado.contains(producto2));
@@ -145,7 +147,7 @@ public class BusquedaEnElCatalogoTest {
     public void test07_filtroNegacionConNegacionDeFiltroCategoria() {
         CriterioDeBusqueda criterioCategoria = new CriterioPorCategoria(Electronica);
         CriterioDeBusqueda criterioNegacionCategoria = new CriterioNegacion(criterioCategoria);
-        List<Producto> resultado = sucursal.filtrar(criterioNegacionCategoria);
+        List<Producto> resultado = tienda.filtrar(criterioNegacionCategoria);
 
         assertEquals(2, resultado.size());
         assertTrue(resultado.contains(producto3));
@@ -158,9 +160,9 @@ public class BusquedaEnElCatalogoTest {
 
     @Test
     public void test08_filtroNegacionConFiltroNegacionDeFiltroDisponibilidad() {
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
         CriterioDeBusqueda criterioNegacionDisponibilidad = new CriterioNegacion(criterioDisponibilidad);
-        List<Producto> resultado = sucursal.filtrar(criterioNegacionDisponibilidad);
+        List<Producto> resultado = tienda.filtrar(criterioNegacionDisponibilidad);
 
         assertEquals(1, resultado.size());
         assertTrue(resultado.contains(producto4));
@@ -178,7 +180,7 @@ public class BusquedaEnElCatalogoTest {
         CriterioDeBusqueda criterioNombre = new CriterioPorNombre("Samsung");
         CriterioDeBusqueda criterioPrecio = new CriterioPrecioMaximo(2000);
         CriterioDeBusqueda criterioNombreYPrecio = new CriteriosConjuncion(criterioNombre, criterioPrecio);
-        List<Producto> resultado = sucursal.filtrar(criterioNombreYPrecio);
+        List<Producto> resultado = tienda.filtrar(criterioNombreYPrecio);
 
         assertEquals(1, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -194,7 +196,7 @@ public class BusquedaEnElCatalogoTest {
         CriterioDeBusqueda criterioNombre = new CriterioPorNombre("Remera");
         CriterioDeBusqueda criterioCategoria = new CriterioPorCategoria(Indumentaria);
         CriterioDeBusqueda criterioNombreYCategoria = new CriteriosConjuncion(criterioNombre, criterioCategoria);
-        List<Producto> resultado = sucursal.filtrar(criterioNombreYCategoria);
+        List<Producto> resultado = tienda.filtrar(criterioNombreYCategoria);
 
         assertEquals(2, resultado.size());
         assertTrue(resultado.contains(producto3));
@@ -208,9 +210,9 @@ public class BusquedaEnElCatalogoTest {
     @Test
     public void test11_filtroConjuncionConFiltrosNombreYDisponibilidad() {
         CriterioDeBusqueda criterioNombre = new CriterioPorNombre("Algodón");
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
         CriterioDeBusqueda criterioNombreYDisponibilidad = new CriteriosConjuncion(criterioNombre, criterioDisponibilidad);
-        List<Producto> resultado = sucursal.filtrar(criterioNombreYDisponibilidad);
+        List<Producto> resultado = tienda.filtrar(criterioNombreYDisponibilidad);
 
         assertEquals(1, resultado.size());
         assertTrue(resultado.contains(producto3));
@@ -226,7 +228,7 @@ public class BusquedaEnElCatalogoTest {
         CriterioDeBusqueda criterioPrecio = new CriterioPrecioMaximo(3000);
         CriterioDeBusqueda criterioCategoria = new CriterioPorCategoria(Indumentaria);
         CriterioDeBusqueda criterioPrecioYCategoria = new CriteriosConjuncion(criterioPrecio, criterioCategoria);
-        List<Producto> resultado = sucursal.filtrar(criterioPrecioYCategoria);
+        List<Producto> resultado = tienda.filtrar(criterioPrecioYCategoria);
 
         assertEquals(2, resultado.size());
         assertTrue(resultado.contains(producto3));
@@ -240,9 +242,9 @@ public class BusquedaEnElCatalogoTest {
     @Test
     public void test13_filtroConjuncionConFiltrosPrecioYDisponibilidad() {
         CriterioDeBusqueda criterioPrecio = new CriterioPrecioMaximo(3000);
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
         CriterioDeBusqueda criterioPrecioYDisponibilidad = new CriteriosConjuncion(criterioPrecio, criterioDisponibilidad);
-        List<Producto> resultado = sucursal.filtrar(criterioPrecioYDisponibilidad);
+        List<Producto> resultado = tienda.filtrar(criterioPrecioYDisponibilidad);
 
         assertEquals(2, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -256,9 +258,9 @@ public class BusquedaEnElCatalogoTest {
     @Test
     public void test14_filtroConjuncionConFiltrosCategoriaYDisponibilidad() {
         CriterioDeBusqueda criterioCategoria = new CriterioPorCategoria(Electronica);
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
         CriterioDeBusqueda criterioCategoriaYDisponibilidad = new CriteriosConjuncion(criterioCategoria, criterioDisponibilidad);
-        List<Producto> resultado = sucursal.filtrar(criterioCategoriaYDisponibilidad);
+        List<Producto> resultado = tienda.filtrar(criterioCategoriaYDisponibilidad);
 
         assertEquals(3, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -276,7 +278,7 @@ public class BusquedaEnElCatalogoTest {
         CriterioDeBusqueda criterioNombre = new CriterioPorNombre("Cargador");
         CriterioDeBusqueda criterioPrecio = new CriterioPrecioMaximo(2000);
         CriterioDeBusqueda criterioNombreOPrecio = new CriteriosDisyuncion(criterioNombre, criterioPrecio);
-        List<Producto> resultado = sucursal.filtrar(criterioNombreOPrecio);
+        List<Producto> resultado = tienda.filtrar(criterioNombreOPrecio);
 
         assertEquals(4, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -293,7 +295,7 @@ public class BusquedaEnElCatalogoTest {
         CriterioDeBusqueda criterioNombre = new CriterioPorNombre("Celular");
         CriterioDeBusqueda criterioCategoria = new CriterioPorCategoria(Indumentaria);
         CriterioDeBusqueda criterioNombreOCategoria = new CriteriosDisyuncion(criterioNombre, criterioCategoria);
-        List<Producto> resultado = sucursal.filtrar(criterioNombreOCategoria);
+        List<Producto> resultado = tienda.filtrar(criterioNombreOCategoria);
 
         assertEquals(4, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -307,9 +309,9 @@ public class BusquedaEnElCatalogoTest {
     @Test
     public void test17_filtroDisyuncionConFiltrosNombreODisponibilidad() {
         CriterioDeBusqueda criterioNombre = new CriterioPorNombre("Blanco");
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
         CriterioDeBusqueda criterioNombreODisponibilidad = new CriteriosDisyuncion(criterioNombre, criterioDisponibilidad);
-        List<Producto> resultado = sucursal.filtrar(criterioNombreODisponibilidad);
+        List<Producto> resultado = tienda.filtrar(criterioNombreODisponibilidad);
 
         assertEquals(4, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -325,7 +327,7 @@ public class BusquedaEnElCatalogoTest {
         CriterioDeBusqueda criterioPrecio = new CriterioPrecioMaximo(2000);
         CriterioDeBusqueda criterioCategoria = new CriterioPorCategoria(Indumentaria);
         CriterioDeBusqueda criterioPrecioOCategoria = new CriteriosDisyuncion(criterioPrecio, criterioCategoria);
-        List<Producto> resultado = sucursal.filtrar(criterioPrecioOCategoria);
+        List<Producto> resultado = tienda.filtrar(criterioPrecioOCategoria);
 
         assertEquals(3, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -339,9 +341,9 @@ public class BusquedaEnElCatalogoTest {
     @Test
     public void test19_filtroDisyuncionConFiltrosPrecioODisponibilidad() {
         CriterioDeBusqueda criterioPrecio = new CriterioPrecioMaximo(1000);
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
         CriterioDeBusqueda criterioPrecioODisponibilidad = new CriteriosDisyuncion(criterioPrecio, criterioDisponibilidad);
-        List<Producto> resultado = sucursal.filtrar(criterioPrecioODisponibilidad);
+        List<Producto> resultado = tienda.filtrar(criterioPrecioODisponibilidad);
 
         assertEquals(4, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -355,9 +357,9 @@ public class BusquedaEnElCatalogoTest {
     @Test
     public void test20_filtroDisyuncionConfiltrosCategoriaODisponibilidad() {
         CriterioDeBusqueda criterioCategoria = new CriterioPorCategoria(Indumentaria);
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
         CriterioDeBusqueda criterioCategoriaODisponibilidad = new CriteriosDisyuncion(criterioCategoria, criterioDisponibilidad);
-        List<Producto> resultado = sucursal.filtrar(criterioCategoriaODisponibilidad);
+        List<Producto> resultado = tienda.filtrar(criterioCategoriaODisponibilidad);
 
         assertEquals(5, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -378,7 +380,7 @@ public class BusquedaEnElCatalogoTest {
         CriterioDeBusqueda criterioNombreYPrecio = new CriteriosConjuncion(criterioNombre, criterioPrecio);
         CriterioDeBusqueda criterioAndMultipleNombrePrecioCategoria = new CriteriosConjuncion(criterioNombreYPrecio, criterioCategoria);
 
-        List<Producto> resultado = sucursal.filtrar(criterioAndMultipleNombrePrecioCategoria);
+        List<Producto> resultado = tienda.filtrar(criterioAndMultipleNombrePrecioCategoria);
 
         assertEquals(3, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -393,12 +395,12 @@ public class BusquedaEnElCatalogoTest {
     public void test22_filtroConjuncionConFiltrosNombreYPrecioYDisponibilidad() {
         CriterioDeBusqueda criterioNombre = new CriterioPorNombre("Algodón");
         CriterioDeBusqueda criterioPrecio = new CriterioPrecioMaximo(3000);
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
 
         CriterioDeBusqueda criterioNombreYPrecio = new CriteriosConjuncion(criterioNombre, criterioPrecio);
         CriterioDeBusqueda criterioAndMultipleNombrePrecioDisponibilidad = new CriteriosConjuncion(criterioNombreYPrecio, criterioDisponibilidad);
 
-        List<Producto> resultado = sucursal.filtrar(criterioAndMultipleNombrePrecioDisponibilidad);
+        List<Producto> resultado = tienda.filtrar(criterioAndMultipleNombrePrecioDisponibilidad);
 
         assertEquals(1, resultado.size());
         assertTrue(resultado.contains(producto3));
@@ -413,12 +415,12 @@ public class BusquedaEnElCatalogoTest {
     public void test23_filtroConjuncionConFiltrosNombreYCategoriaYDisponibilidad() {
         CriterioDeBusqueda criterioNombre = new CriterioPorNombre("Samsung");
         CriterioDeBusqueda criterioCategoria = new CriterioPorCategoria(Electronica);
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
 
         CriterioDeBusqueda criterioNombreYCategoria = new CriteriosConjuncion(criterioNombre, criterioCategoria);
         CriterioDeBusqueda criterioAndMultipleNombreCategoriaDisponibilidad = new CriteriosConjuncion(criterioNombreYCategoria, criterioDisponibilidad);
 
-        List<Producto> resultado = sucursal.filtrar(criterioAndMultipleNombreCategoriaDisponibilidad);
+        List<Producto> resultado = tienda.filtrar(criterioAndMultipleNombreCategoriaDisponibilidad);
 
         assertEquals(3, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -433,12 +435,12 @@ public class BusquedaEnElCatalogoTest {
     public void test24_filtroConjuncionConFiltrosPrecioYCategoriaYDisponibilidad() {
         CriterioDeBusqueda criterioPrecio = new CriterioPrecioMaximo(3000);
         CriterioDeBusqueda criterioCategoria = new CriterioPorCategoria(Indumentaria);
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
 
         CriterioDeBusqueda criterioPrecioYCategoria = new CriteriosConjuncion(criterioPrecio, criterioCategoria);
         CriterioDeBusqueda criterioAndMultiplePrecioCategoriaDisponibilidad = new CriteriosConjuncion(criterioPrecioYCategoria, criterioDisponibilidad);
 
-        List<Producto> resultado = sucursal.filtrar(criterioAndMultiplePrecioCategoriaDisponibilidad);
+        List<Producto> resultado = tienda.filtrar(criterioAndMultiplePrecioCategoriaDisponibilidad);
 
         assertEquals(1, resultado.size());
         assertTrue(resultado.contains(producto3));
@@ -460,7 +462,7 @@ public class BusquedaEnElCatalogoTest {
         CriterioDeBusqueda criterioNombreOPrecio = new CriteriosDisyuncion(criterioNombre, criterioPrecio);
         CriterioDeBusqueda criterioOrMultipleNombrePrecioCategoria = new CriteriosDisyuncion(criterioNombreOPrecio, criterioCategoria);
 
-        List<Producto> resultado = sucursal.filtrar(criterioOrMultipleNombrePrecioCategoria);
+        List<Producto> resultado = tienda.filtrar(criterioOrMultipleNombrePrecioCategoria);
 
         assertEquals(4, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -475,12 +477,12 @@ public class BusquedaEnElCatalogoTest {
     public void test26_filtroDisyuncionConFiltrosNombreOPrecioODisponibilidad() {
         CriterioDeBusqueda criterioNombre = new CriterioPorNombre("Blanco");
         CriterioDeBusqueda criterioPrecio = new CriterioPrecioMaximo(1000);
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
 
         CriterioDeBusqueda criterioNombreOPrecio = new CriteriosDisyuncion(criterioNombre, criterioPrecio);
         CriterioDeBusqueda criterioOrMultipleNombrePrecioDisponibilidad = new CriteriosDisyuncion(criterioNombreOPrecio, criterioDisponibilidad);
 
-        List<Producto> resultado = sucursal.filtrar(criterioOrMultipleNombrePrecioDisponibilidad);
+        List<Producto> resultado = tienda.filtrar(criterioOrMultipleNombrePrecioDisponibilidad);
 
         assertEquals(4, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -495,12 +497,12 @@ public class BusquedaEnElCatalogoTest {
     public void test27_filtroDisyuncionConFiltrosNombreOCategoriaODisponibilidad() {
         CriterioDeBusqueda criterioNombre = new CriterioPorNombre("Remera");
         CriterioDeBusqueda criterioCategoria = new CriterioPorCategoria(Electronica);
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
 
         CriterioDeBusqueda criterioNombreOCategoria = new CriteriosDisyuncion(criterioNombre, criterioCategoria);
         CriterioDeBusqueda criterioOrMultipleNombreCategoriaDisponibilidad = new CriteriosDisyuncion(criterioNombreOCategoria, criterioDisponibilidad);
 
-        List<Producto> resultado = sucursal.filtrar(criterioOrMultipleNombreCategoriaDisponibilidad);
+        List<Producto> resultado = tienda.filtrar(criterioOrMultipleNombreCategoriaDisponibilidad);
 
         assertEquals(5, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -514,12 +516,12 @@ public class BusquedaEnElCatalogoTest {
     public void test28_filtroDisyuncionConFiltrosPrecioOCategoriaODisponibilidad() {
         CriterioDeBusqueda criterioPrecio = new CriterioPrecioMaximo(1000);
         CriterioDeBusqueda criterioCategoria = new CriterioPorCategoria(Indumentaria);
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
 
         CriterioDeBusqueda criterioPrecioOCategoria = new CriteriosDisyuncion(criterioPrecio, criterioCategoria);
         CriterioDeBusqueda criterioOrMultiplePrecioCategoriaDisponibilidad = new CriteriosDisyuncion(criterioPrecioOCategoria, criterioDisponibilidad);
 
-        List<Producto> resultado = sucursal.filtrar(criterioOrMultiplePrecioCategoriaDisponibilidad);
+        List<Producto> resultado = tienda.filtrar(criterioOrMultiplePrecioCategoriaDisponibilidad);
 
         assertEquals(5, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -540,7 +542,7 @@ public class BusquedaEnElCatalogoTest {
         CriterioDeBusqueda criterioNombreOPrecio = new CriteriosDisyuncion(criterioNombre, criterioPrecio);
         CriterioDeBusqueda criterioAndAnidadoConOrA = new CriteriosConjuncion(criterioNombreOPrecio, criterioCategoria);
 
-        List<Producto> resultado = sucursal.filtrar(criterioAndAnidadoConOrA);
+        List<Producto> resultado = tienda.filtrar(criterioAndAnidadoConOrA);
 
         assertEquals(2, resultado.size());
         assertTrue(resultado.contains(producto1));
@@ -553,21 +555,32 @@ public class BusquedaEnElCatalogoTest {
 
     @Test
     public void test30_compuesto_AndAnidadoConOr_VariacionB() {
+        // Creamos una segunda sucursal para validar la disponibilidad en otra sucursal
+        Sucursal sucursalQuilmes = new Sucursal(tienda, "Rivadavia 123");
+        tienda.registrarSucursal(sucursalQuilmes);
+
+        // Hacemos que el producto1 NO tenga stock en Bernal (sucursal original),
+        // pero que SÍ tenga stock físico en la sucursal de Quilmes.
+        sucursal.decrementarStock(Map.of(producto1, 10)); // Bernal queda en 0
+        sucursalQuilmes.agregarStock(producto1, 5);       // Quilmes aporta las unidades
+
         CriterioDeBusqueda criterioCategoria = new CriterioPorCategoria(Indumentaria);
-        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(sucursal);
+        CriterioDeBusqueda criterioDisponibilidad = new CriterioPorDisponibilidad(tienda);
         CriterioDeBusqueda criterioPrecio = new CriterioPrecioMaximo(3000);
 
         CriterioDeBusqueda criterioCategoriaODisponibilidad = new CriteriosDisyuncion(criterioCategoria, criterioDisponibilidad);
         CriterioDeBusqueda criterioAndAnidadoConOrB = new CriteriosConjuncion(criterioCategoriaODisponibilidad, criterioPrecio);
 
-        List<Producto> resultado = sucursal.filtrar(criterioAndAnidadoConOrB);
+        List<Producto> resultado = tienda.filtrar(criterioAndAnidadoConOrB);
 
+        // Verificaciones del resultado final:
+        // - producto1: Sale en la lista porque cuesta $1500 (<=3000) y está DISPONIBLE en Quilmes.
+        // - producto3: Sale en la lista porque cuesta $2500 (<=3000) y pertenece a Indumentaria.
         assertEquals(3, resultado.size());
         assertTrue(resultado.contains(producto1));
         assertTrue(resultado.contains(producto3));
-        assertTrue(resultado.contains(producto4));
 
-        assertFalse(resultado.contains(producto2));
-        assertFalse(resultado.contains(paquete1));
+        // producto4 no entra porque cuesta $4500 (supera el precio máximo de 3000)
+        assertTrue(resultado.contains(producto4));
     }
 }

@@ -1,20 +1,22 @@
-import Clases.Producto;
-import Clases.Paquete;
-import Clases.ProductoIndividual;
-import Clases.Sucursal;
+import Clases.*;
+import Excepciones.NoHayStockException;
+import Excepciones.TiendaInvalidaException;
+import MetodosDeEnvio.MetodoDeEnvio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static Clases.Categoria.Electronica;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ProductosTest {
     ProductoIndividual producto1;
     ProductoIndividual producto2;
     ProductoIndividual producto3;
+    UNQShop tienda;
     Sucursal sucursal;
 
     @BeforeEach
@@ -22,7 +24,9 @@ public class ProductosTest {
         producto1 = new ProductoIndividual("E0123", "Cable USB-C","cable cargador Samsung A15", "Samsung", Electronica, 800);
         producto2 = new ProductoIndividual("E1235", "Funda Protector","funda celular negra", "Samsung", Electronica, 1500, 0.10);
         producto3 = new ProductoIndividual("E0126", "Cable USB-C","cable cargador Samsung A35", "Samsung", Electronica, 800);
-        sucursal = new Sucursal();
+        tienda = new UNQShop();
+        sucursal = new Sucursal(tienda, "Andres Baranda 750");
+        tienda.registrarSucursal(sucursal);
     }
 
     //TESTS DE PRODUCTOS INDIVIDUALES
@@ -214,7 +218,7 @@ public class ProductosTest {
 
     @Test
     void test024_FabricarPaqueteEnSucursalConStockSuficienteDescuentaDeIndividuales() {
-        Sucursal sucursal = new Sucursal();
+        Sucursal sucursal = new Sucursal(tienda,"Roque Sáenz Peña 352");
         sucursal.agregarStock(producto1, 10);
         sucursal.agregarStock(producto3, 5);
 
@@ -230,7 +234,7 @@ public class ProductosTest {
 
     @Test
     void test025_FabricarPaqueteEnSucursalSinStockSuficienteLanzaExcepcion() {
-        Sucursal sucursal = new Sucursal();
+        Sucursal sucursal = new Sucursal(tienda,"Roque Sáenz Peña 352");
         sucursal.agregarStock(producto1, 1); // Se necesita 2, hay 1.
         sucursal.agregarStock(producto3, 10);
 
@@ -245,7 +249,7 @@ public class ProductosTest {
 
     @Test
     void test026_FabricarPaqueteCompositeQueContieneOtroPaqueteCreadoAnteriormente() {
-        Sucursal sucursal = new Sucursal();
+        Sucursal sucursal = new Sucursal(tienda,"Roque Sáenz Peña 352");
         sucursal.agregarStock(producto1, 10);
         sucursal.agregarStock(producto2, 5);
         sucursal.agregarStock(producto3, 5);
@@ -269,7 +273,7 @@ public class ProductosTest {
 
     @Test
     void test027_SucursalPermiteAplicarDescuentoAProductoIndividualQueNoTenia() {
-        Sucursal sucursal = new Sucursal();
+        Sucursal sucursal = new Sucursal(tienda,"Roque Sáenz Peña 352");
         sucursal.agregarStock(producto1, 5);
 
         assertEquals(800, producto1.getPrecioFinal());
@@ -281,7 +285,7 @@ public class ProductosTest {
 
     @Test
     void test026_AplicarDescuentoAProductoQueNoEstaEnLaSucursalLanzaExcepcion() {
-        Sucursal sucursal = new Sucursal();
+        Sucursal sucursal = new Sucursal(tienda,"Roque Sáenz Peña 352");
         assertThrows(RuntimeException.class, () -> {
             sucursal.aplicarDescuentoAProducto(producto1, 0.20);
         });
@@ -289,7 +293,7 @@ public class ProductosTest {
 
     @Test
     void test027_SucursalPermiteCambiarElDescuentoDeUnProductoQueYaTeniaUno() {
-        Sucursal sucursal = new Sucursal();
+        Sucursal sucursal = new Sucursal(tienda,"Roque Sáenz Peña 352");
 
         sucursal.agregarStock(producto2, 5);
 
@@ -298,5 +302,139 @@ public class ProductosTest {
         sucursal.aplicarDescuentoAProducto(producto2, 0.20);
 
         assertEquals(1200, producto2.getPrecioFinal());
+    }
+
+    // TESTS DE GESTIÓN MULTISUCURSAL Y TRASLADOS (UNQ-SHOP)
+    // =========================================================================
+
+    @Test
+    void test027_PedidoSeProcesaCorrectamenteCuandoLaSucursalElegidaTieneStockLocal() {
+        UNQShop tienda = new UNQShop();
+        Sucursal sucursalBernal = new Sucursal(tienda,"Roque Sáenz Peña 352");
+        tienda.registrarSucursal(sucursalBernal);
+
+        // Agregamos stock local en Bernal
+        sucursalBernal.agregarStock(producto1, 5);
+
+        // Simulamos un pedido de 2 unidades de producto1 para Bernal
+        Pedido pedido = mock(Pedido.class);
+        when(pedido.getCarritoDeProductos()).thenReturn(Map.of(producto1, 2));
+
+        // Procesamos el pedido desde el core central de la tienda
+        tienda.procesarPedido(pedido, sucursalBernal);
+
+        // Debería haber descontado directamente del stock local (5 - 2 = 3)
+        assertEquals(3, sucursalBernal.getStockDeProductos().get(producto1));
+    }
+
+    @Test
+    void test028_PedidoActivaTrasladoInternoCuandoSucursalDestinoNoTieneStockPeroOtraSi() {
+        UNQShop tienda = new UNQShop();
+        Sucursal sucursalBernal = new Sucursal(tienda,"Roque Sáenz Peña 352");
+        Sucursal sucursalQuilmes = new Sucursal(tienda,"Rivadavia 123");
+
+        tienda.registrarSucursal(sucursalBernal);
+        tienda.registrarSucursal(sucursalQuilmes);
+
+        // Bernal (donde pide retirar el cliente) NO tiene stock.
+        // Quilmes SÍ tiene stock del producto.
+        sucursalQuilmes.agregarStock(producto1, 10);
+
+        Pedido pedido = mock(Pedido.class);
+        when(pedido.getCarritoDeProductos()).thenReturn(Map.of(producto1, 3));
+
+        // El cliente procesa su pedido queriendo retirar en Bernal
+        tienda.procesarPedido(pedido, sucursalBernal);
+
+        // VERIFICACIONES DEL TRASLADO:
+        // 1. Quilmes prestó 3 unidades, le tienen que quedar 7 (10 - 3)
+        assertEquals(7, sucursalQuilmes.getStockDeProductos().get(producto1));
+        // 2. Bernal recibió el traslado y despachó el pedido inmediatamente, su stock neto vuelve a quedar en 0
+        assertEquals(0, sucursalBernal.getStockDeProductos().get(producto1));
+    }
+
+    @Test
+    void test029_PedidoLanzaExcepcionSiNingunaSucursalDeLaTiendaTieneElStockRequerido() {
+        UNQShop tienda = new UNQShop();
+        Sucursal sucursalBernal = new Sucursal(tienda,"Roque Sáenz Peña 352");
+        Sucursal sucursalQuilmes = new Sucursal(tienda,"Rivadavia 123");
+
+        tienda.registrarSucursal(sucursalBernal);
+        tienda.registrarSucursal(sucursalQuilmes);
+
+        // Ponemos stock insuficiente en toda la empresa (se necesitan 5 unidades)
+        sucursalBernal.agregarStock(producto1, 1);
+        sucursalQuilmes.agregarStock(producto1, 2);
+
+        Pedido pedido = mock(Pedido.class);
+        when(pedido.getCarritoDeProductos()).thenReturn(Map.of(producto1, 5));
+
+        // Al intentar procesar en Bernal, como Quilmes tampoco llega a cubrir las 5 unidades completas, debe fallar
+        assertThrows(RuntimeException.class, () -> {
+            tienda.procesarPedido(pedido, sucursalBernal);
+        });
+    }
+
+    // NUEVOS TESTS ARQUITECTURA MULTISUCURSAL
+
+    @Test
+    void test027_TiendaNoPermiteRegistrarSucursalesInpostorasDeOtrasCadenas() {
+        UNQShop otraTiendaCompetencia = new UNQShop();
+        Sucursal sucursalDeLaCompetencia = new Sucursal(otraTiendaCompetencia, "Calle Falsa 123");
+
+        assertThrows(TiendaInvalidaException.class, () -> {
+            tienda.registrarSucursal(sucursalDeLaCompetencia);
+        });
+    }
+
+    @Test
+    void test028_ProcesarPedidoEjecutaTrasladoInternoSiLaSucursalDestinoEstaVaciaPeroOtraTieneStock() {
+        Sucursal sucursalQuilmes = new Sucursal(tienda, "Rivadavia 123");
+        tienda.registrarSucursal(sucursalQuilmes);
+
+        // sucursal (Bernal) está en 0. Quilmes aporta la mercadería
+        sucursalQuilmes.agregarStock(producto1, 10);
+
+        Pedido pedidoMock = mock(Pedido.class);
+        when(pedidoMock.getCarritoDeProductos()).thenReturn(Map.of(producto1, 3));
+
+        // Se orquesta el pedido en la tienda central indicando destino Bernal
+        tienda.procesarPedido(pedidoMock, sucursal);
+
+        // Verificaciones post-traslado
+        assertEquals(7, sucursalQuilmes.getStockDeProductos().get(producto1)); // Prestó 3
+        assertEquals(0, sucursal.getStockDeProductos().get(producto1));        // Entraron 3 y se consumieron al instante
+    }
+
+    @Test
+    void test029_AgregarProductoAlPedidoFallaSiElProductoEstaCatalogadoPeroNadieTieneStockFisico() {
+        // Al agregar stock se cataloga en la tienda de forma automática
+        sucursal.agregarStock(producto1, 5);
+
+        // Pero creamos un producto nuevo que sí está en el catálogo global explícitamente pero con stock 0 general
+        tienda.getCatalogoDeProductos().add(producto2);
+
+        Pedido pedidoReal = new Pedido(sucursal, mock(MetodoDeEnvio.class), mock(Cliente.class));
+
+        assertThrows(NoHayStockException.class, () -> {
+            pedidoReal.agregarProducto(producto2, 1);
+        });
+    }
+
+    @Test
+    void test030_AgregarProductoAlPedidoEsExitosoSiLaSucursalDestinoNoTieneStockPeroOtraSi() {
+        Sucursal sucursalQuilmes = new Sucursal(tienda, "Rivadavia 123");
+        tienda.registrarSucursal(sucursalQuilmes);
+
+        // Quilmes tiene el stock físico. Bernal (sucursal) está vacía.
+        sucursalQuilmes.agregarStock(producto1, 5);
+
+        Pedido pedidoReal = new Pedido(sucursal, mock(MetodoDeEnvio.class), mock(Cliente.class));
+
+        // Pasa con éxito porque Quilmes respalda la operación de forma global
+        assertDoesNotThrow(() -> {
+            pedidoReal.agregarProducto(producto1, 2);
+        });
+        assertEquals(2, pedidoReal.getCarritoDeProductos().get(producto1));
     }
 }

@@ -1,8 +1,8 @@
 package Clases;
 
 import Excepciones.CantidadInsuficienteException;
-import Excepciones.NoHayProductoEnPedidoException;
 import Excepciones.NoHayStockException;
+import Excepciones.ProductoNoEncontradoException;
 import MetodosDeEnvio.MetodoDeEnvio;
 import NotificacionesDelPedido.Notificador;
 import CicloDeVidaDelPedido.EstadoDePedido;
@@ -63,16 +63,29 @@ public class Pedido {
 
 
     public void agregarProducto(Producto producto, int cantProducto) {
-        if (sucursal.tieneStock(producto, cantProducto)) {
-            carritoDeProductos.put(producto, carritoDeProductos.getOrDefault(producto,0) + cantProducto);
-        } else {
-            throw new NoHayStockException("No hay suficiente stock");
+        UNQShop unqShopGlobal = this.sucursal.getTienda();
+
+        //El producto debe existir en el catálogo global de la tienda
+        if (!unqShopGlobal.getCatalogoDeProductos().contains(producto)) {
+            throw new ProductoNoEncontradoException("El producto no existe en el catálogo global de la tienda.");
         }
+
+        // ¿La sucursal destino tiene stock o alguna otra sucursal de UNQShop lo tiene?
+        boolean hayStockDisponibleEnAlgunaSucursal = this.sucursal.tieneStock(producto, cantProducto)
+                || unqShopGlobal.getSucursales().stream().anyMatch(s -> s.tieneStock(producto, cantProducto));
+
+        if (!hayStockDisponibleEnAlgunaSucursal) {
+            throw new NoHayStockException("No es posible agregar el producto. Ninguna sucursal tiene stock suficiente.");
+        }
+
+        // Si pasa las validaciones, se añade al carrito normalmente
+        int cantidadActual = carritoDeProductos.getOrDefault(producto, 0);
+        carritoDeProductos.put(producto, cantidadActual + cantProducto);
     }
 
     public void quitarProducto(Producto producto, int cantProducto) {
         if (!carritoDeProductos.containsKey(producto)) {
-            throw new NoHayProductoEnPedidoException("No existe ese producto en el pedido");
+            throw new ProductoNoEncontradoException("No existe ese producto en el pedido");
         }
 
         int cantidadActual = carritoDeProductos.get(producto);
