@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static Clases.Categoria.Electronica;
 import static Clases.Categoria.Indumentaria;
@@ -41,7 +42,7 @@ public class BusquedaEnElCatalogoTest {
                 "Adidas", Indumentaria, 2000
         );
 
-        paquete1 = new Paquete("Combo Samsung", "Celular + Cargador con descuento", producto1, producto2, Electronica);
+        paquete1 = new Paquete("Combo Samsung", "Celular + Cargador con descuento", Electronica, Map.of(producto1,1, producto2,1));
 
         sucursal.agregarStock(producto1, 10);
         sucursal.agregarStock(producto3, 5);

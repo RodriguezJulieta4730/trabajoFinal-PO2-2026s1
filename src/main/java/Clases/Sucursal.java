@@ -1,6 +1,7 @@
 package Clases;
 
 import BusquedaEnElCatalogo.CriterioDeBusqueda;
+import Excepciones.ProductoNoEncontradoException;
 import Excepciones.StockNegativoException;
 import lombok.Getter;
 
@@ -16,7 +17,8 @@ public class Sucursal {
     public void agregarStock(Producto producto, int stock) {
         catalogoDeProductos.add(producto);
         if(stock>0){
-            stockDeProductos.put(producto,stock);
+            int stockActual = stockDeProductos.getOrDefault(producto, 0);
+            stockDeProductos.put(producto, stockActual + stock);
         }else{
             throw new StockNegativoException("El numero debe ser positivo");
         }
@@ -59,6 +61,51 @@ public class Sucursal {
 
     public void registarPedidoEnHistorial(Pedido pedido) {
         historialPedidos.add(pedido);
+    }
+
+    public void fabricarPaquete(String nombre, String descripcion, Categoria categoria,
+                                Map<Producto, Integer> productos) {
+
+        validarStock(productos);
+        descontarStock(productos);
+        Paquete nuevoPaquete = new Paquete(nombre, descripcion, categoria, productos);
+        this.agregarStock(nuevoPaquete,1);
+    }
+
+    public Paquete fabricarPaquete(String nombre, String descripcion, double descuento, Categoria categoria, Map<Producto, Integer> receta) {
+        validarStock(receta);
+        descontarStock(receta);
+        Paquete nuevoPaquete = new Paquete(nombre, descripcion, descuento, categoria, receta);
+        this.agregarStock(nuevoPaquete, 1);
+        return nuevoPaquete;
+    }
+
+    private void validarStock(Map<Producto, Integer> receta) {
+        for (Map.Entry<Producto, Integer> entry : receta.entrySet()) {
+            Producto componente = entry.getKey();
+            int cantidadRequerida = entry.getValue();
+
+            if (!this.tieneStock(componente, cantidadRequerida)) {
+                throw new StockNegativoException("No es posible armar el paquete. Stock insuficiente de: " + componente.getNombre());
+            }
+        }
+    }
+
+    private void descontarStock(Map<Producto, Integer> receta) {
+        for (Map.Entry<Producto, Integer> entry : receta.entrySet()) {
+            Producto componente = entry.getKey();
+            int cantidadRequerida = entry.getValue();
+
+            int stockActual = this.stockDeProductos.get(componente);
+            this.stockDeProductos.put(componente, stockActual - cantidadRequerida);
+        }
+    }
+
+    public void aplicarDescuentoAProducto(ProductoIndividual producto, double nuevoDescuento) {
+        if (!catalogoDeProductos.contains(producto)) {
+            throw new ProductoNoEncontradoException("El producto " + producto.getNombre() + " no pertenece al catálogo de esta sucursal");
+        }
+        producto.setDescuento(nuevoDescuento);
     }
 }
 
