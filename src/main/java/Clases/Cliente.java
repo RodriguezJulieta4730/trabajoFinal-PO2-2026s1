@@ -7,7 +7,7 @@ public class Cliente {
     private final String alias;
     private final long cbu;
     private String email;
-    private String direccion; // Podría ser una clase Direccion más adelante, por ahora String
+    private String direccion;
 
     public Cliente(String alias, long cbu, String email, String direccion) {
         this.alias = alias;

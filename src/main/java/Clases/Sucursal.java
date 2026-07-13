@@ -75,32 +75,32 @@ public class Sucursal {
         this.agregarStock(nuevoPaquete,1);
     }
 
-    public Paquete fabricarPaquete(String nombre, String descripcion, double descuento, Categoria categoria, Map<Producto, Integer> receta) {
-        validarStock(receta);
-        descontarStock(receta);
-        Paquete nuevoPaquete = new Paquete(nombre, descripcion, descuento, categoria, receta);
+    public Paquete fabricarPaquete(String nombre, String descripcion, double descuento, Categoria categoria, Map<Producto, Integer> productos) {
+        validarStock(productos);
+        descontarStock(productos);
+        Paquete nuevoPaquete = new Paquete(nombre, descripcion, descuento, categoria, productos);
         this.agregarStock(nuevoPaquete, 1);
         return nuevoPaquete;
     }
 
-    private void validarStock(Map<Producto, Integer> receta) {
-        for (Map.Entry<Producto, Integer> entry : receta.entrySet()) {
-            Producto componente = entry.getKey();
+    private void validarStock(Map<Producto, Integer> productos) {
+        for (Map.Entry<Producto, Integer> entry : productos.entrySet()) {
+            Producto producto = entry.getKey();
             int cantidadRequerida = entry.getValue();
 
-            if (!this.tieneStock(componente, cantidadRequerida)) {
-                throw new StockNegativoException("No es posible armar el paquete. Stock insuficiente de: " + componente.getNombre());
+            if (!this.tieneStock(producto, cantidadRequerida)) {
+                throw new StockNegativoException("No es posible armar el paquete. Stock insuficiente de: " + producto.getNombre());
             }
         }
     }
 
-    private void descontarStock(Map<Producto, Integer> receta) {
-        for (Map.Entry<Producto, Integer> entry : receta.entrySet()) {
-            Producto componente = entry.getKey();
+    private void descontarStock(Map<Producto, Integer> productos) {
+        for (Map.Entry<Producto, Integer> entry : productos.entrySet()) {
+            Producto producto = entry.getKey();
             int cantidadRequerida = entry.getValue();
 
-            int stockActual = this.stockDeProductos.get(componente);
-            this.stockDeProductos.put(componente, stockActual - cantidadRequerida);
+            int stockActual = this.stockDeProductos.get(producto);
+            this.stockDeProductos.put(producto, stockActual - cantidadRequerida);
         }
     }
 

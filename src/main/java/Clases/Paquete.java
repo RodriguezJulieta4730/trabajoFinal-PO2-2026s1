@@ -22,12 +22,12 @@ public class Paquete extends Producto {
         this.precioBase = this.getPrecioBase();
     }
 
-    public Paquete(String nombre, String descripcion, double descuento, Categoria categoria, Map<Producto, Integer> componentes) {
+    public Paquete(String nombre, String descripcion, double descuento, Categoria categoria, Map<Producto, Integer> productos) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.descuento = descuento;
         this.categoria = categoria;
-        this.productos = new HashMap<>(componentes);
+        this.productos = new HashMap<>(productos);
         this.precioBase = this.getPrecioBase();
     }
 
