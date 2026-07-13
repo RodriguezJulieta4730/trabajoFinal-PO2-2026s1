@@ -63,7 +63,7 @@ public class Pedido {
 
 
     public void agregarProducto(Producto producto, int cantProducto) {
-        UNQShop unqShopGlobal = this.sucursal.getTienda();
+        Tienda unqShopGlobal = this.sucursal.getTienda();
 
         //El producto debe existir en el catálogo global de la tienda
         if (!unqShopGlobal.getCatalogoDeProductos().contains(producto)) {

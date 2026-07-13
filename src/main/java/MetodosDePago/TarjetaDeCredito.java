@@ -7,7 +7,7 @@ import lombok.Getter;
 public class TarjetaDeCredito extends MedioDePago {
     private final TarjetaApi tarjetaApi;
     private final Cliente cliente;
-    private  final String datosDeTarjeta;
+    private final String datosDeTarjeta;
 
 
     public TarjetaDeCredito(TarjetaApi tarjetaApi, Cliente cliente, String datosDeTarjeta){

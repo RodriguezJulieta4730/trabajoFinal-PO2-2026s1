@@ -11,7 +11,7 @@ import static Clases.Categoria.Indumentaria;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BusquedaEnElCatalogoTest {
-    private UNQShop tienda;
+    private Tienda tienda;
     private Sucursal sucursal;
     private ProductoIndividual producto1;
     private ProductoIndividual producto2;
@@ -21,7 +21,7 @@ public class BusquedaEnElCatalogoTest {
 
     @BeforeEach
     public void setUp() {
-        tienda = new UNQShop();
+        tienda = new Tienda();
         sucursal = new Sucursal(tienda,"Roque Sáenz Peña 352");
         tienda.registrarSucursal(sucursal);
 

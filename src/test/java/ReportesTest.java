@@ -15,9 +15,11 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReportesTest {
-    private UNQShop tienda;
-    private Sucursal sucursal;
+    private Tienda tienda;
+    private Sucursal sucursalAlmagro;
+    private Sucursal sucursalPalermo;
     private ReporteProductosMasVendidos reporte;
+
     @Mock private Pedido pedido1;
     @Mock private Pedido pedido2;
     @Mock private Pedido pedido3;
@@ -27,9 +29,13 @@ class ReportesTest {
 
     @BeforeEach
     void setUp() {
-        tienda = new UNQShop();
-        sucursal = new Sucursal(tienda,"Roque Sáenz Peña 352");
-        tienda.registrarSucursal(sucursal);
+        tienda = new Tienda();
+
+        sucursalAlmagro = new Sucursal(tienda, "Roque Sáenz Peña 352");
+        sucursalPalermo = new Sucursal(tienda, "Av. Santa Fe 2500");
+
+        tienda.registrarSucursal(sucursalAlmagro);
+        tienda.registrarSucursal(sucursalPalermo);
 
         when(producto1.getNombre()).thenReturn("Auriculares Bluetooth");
         when(producto1.getPrecioFinal()).thenReturn(8000.0);
@@ -52,23 +58,18 @@ class ReportesTest {
         when(pedido3.getFecha()).thenReturn(LocalDate.now().plusDays(1));
         when(pedido3.getCarritoDeProductos()).thenReturn(carrito3);
 
-        sucursal.getHistorialPedidos().add(pedido1);
-        sucursal.getHistorialPedidos().add(pedido2);
-        sucursal.getHistorialPedidos().add(pedido3);
+        sucursalAlmagro.getHistorialPedidos().add(pedido1);
+        sucursalAlmagro.getHistorialPedidos().add(pedido2);
+        sucursalPalermo.getHistorialPedidos().add(pedido3);
 
         LocalDate inicio = LocalDate.now();
         LocalDate fin = LocalDate.now().plusDays(1);
 
-        reporte = new ReporteProductosMasVendidos(
-                sucursal.getHistorialPedidos(),
-                inicio,
-                fin
-        );
+        reporte = new ReporteProductosMasVendidos(tienda, inicio, fin);
     }
 
     @Test
     void test01_lineasDeReporte() {
-
         assertEquals(2, reporte.getLineas().size());
 
         LineaDeReporte linea1 = reporte.getLineas().get(0);
@@ -80,22 +81,24 @@ class ReportesTest {
         assertEquals("Pack Audio", linea2.getNombre());
         assertEquals(1, linea2.getCantidadVendida());
         assertEquals(15000.0, linea2.getPrecioPromedioCobrado());
+
         verify(pedido1, never()).getCarritoDeProductos();
     }
+
     @Test
     void test02_exportacionCsv() {
-
         String csv = reporte.exportar(new Csv());
         assertTrue(csv.contains("Auriculares Bluetooth,3,8000.0"));
         assertTrue(csv.contains("Pack Audio,1,15000.0"));
     }
+
     @Test
     void test03_exportacionHtml(){
-
         String html = reporte.exportar(new Html());
         assertTrue(html.contains("<td>Auriculares Bluetooth</td><td>3</td><td>8000.0</td>"));
         assertTrue(html.contains("<td>Pack Audio</td><td>1</td><td>15000.0</td>"));
     }
+
     @Test
     void test04_exportacionTextoPlano(){
         String textoPlano = reporte.exportar(new TextoPlano());

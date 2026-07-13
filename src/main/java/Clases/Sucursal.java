@@ -1,21 +1,19 @@
 package Clases;
 
-import BusquedaEnElCatalogo.CriterioDeBusqueda;
 import Excepciones.ProductoNoEncontradoException;
 import Excepciones.StockNegativoException;
 import lombok.Getter;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Getter
 public class Sucursal {
-    private final UNQShop tienda;
+    private final Tienda tienda;
     private final String direccion;
     private final Map<Producto,Integer> stockDeProductos = new HashMap<>();
     private final List<Pedido> historialPedidos = new ArrayList<>();
 
-    public Sucursal(UNQShop tienda,String direccion) {
+    public Sucursal(Tienda tienda, String direccion) {
         this.tienda=tienda;
         this.direccion = direccion;
     }
@@ -65,7 +63,7 @@ public class Sucursal {
         historialPedidos.add(pedido);
     }
 
-    public void fabricarPaquete(String nombre, String descripcion, Categoria categoria,
+    public Paquete fabricarPaquete(String nombre, String descripcion, Categoria categoria,
                                 Map<Producto, Integer> productos) {
 
         validarStock(productos);
@@ -73,6 +71,7 @@ public class Sucursal {
         Paquete nuevoPaquete = new Paquete(nombre, descripcion, categoria, productos);
         tienda.getCatalogoDeProductos().add(nuevoPaquete);
         this.agregarStock(nuevoPaquete,1);
+        return nuevoPaquete;
     }
 
     public Paquete fabricarPaquete(String nombre, String descripcion, double descuento, Categoria categoria, Map<Producto, Integer> productos) {

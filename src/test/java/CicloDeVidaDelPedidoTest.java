@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class CicloDeVidaDelPedidoTest {
-    private UNQShop tienda;
+    private Tienda tienda;
     Producto producto1;
     Sucursal sucursal1;
     Pedido pedido1;
@@ -24,7 +24,7 @@ public class CicloDeVidaDelPedidoTest {
 
     @BeforeEach
     void setUp(){
-        tienda = new UNQShop();
+        tienda = new Tienda();
         envioEstandar = new EnvioEstandar();
         sucursal1 = new Sucursal(tienda,"Roque Sáenz Peña 352");
         tienda.registrarSucursal(sucursal1);

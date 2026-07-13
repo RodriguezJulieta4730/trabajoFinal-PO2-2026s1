@@ -1,13 +1,12 @@
 package BusquedaEnElCatalogo;
 
 import Clases.Producto;
-import Clases.Sucursal;
-import Clases.UNQShop;
+import Clases.Tienda;
 
 public class CriterioPorDisponibilidad implements CriterioDeBusqueda {
-    private final UNQShop tienda;
+    private final Tienda tienda;
 
-    public CriterioPorDisponibilidad(UNQShop tienda) {
+    public CriterioPorDisponibilidad(Tienda tienda) {
         this.tienda = tienda;
     }
 

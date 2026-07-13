@@ -16,7 +16,7 @@ public class ProductosTest {
     ProductoIndividual producto1;
     ProductoIndividual producto2;
     ProductoIndividual producto3;
-    UNQShop tienda;
+    Tienda tienda;
     Sucursal sucursal;
 
     @BeforeEach
@@ -24,7 +24,7 @@ public class ProductosTest {
         producto1 = new ProductoIndividual("E0123", "Cable USB-C","cable cargador Samsung A15", "Samsung", Electronica, 800);
         producto2 = new ProductoIndividual("E1235", "Funda Protector","funda celular negra", "Samsung", Electronica, 1500, 0.10);
         producto3 = new ProductoIndividual("E0126", "Cable USB-C","cable cargador Samsung A35", "Samsung", Electronica, 800);
-        tienda = new UNQShop();
+        tienda = new Tienda();
         sucursal = new Sucursal(tienda, "Andres Baranda 750");
         tienda.registrarSucursal(sucursal);
     }
@@ -309,7 +309,7 @@ public class ProductosTest {
 
     @Test
     void test027_PedidoSeProcesaCorrectamenteCuandoLaSucursalElegidaTieneStockLocal() {
-        UNQShop tienda = new UNQShop();
+        Tienda tienda = new Tienda();
         Sucursal sucursalBernal = new Sucursal(tienda,"Roque Sáenz Peña 352");
         tienda.registrarSucursal(sucursalBernal);
 
@@ -329,7 +329,7 @@ public class ProductosTest {
 
     @Test
     void test028_PedidoActivaTrasladoInternoCuandoSucursalDestinoNoTieneStockPeroOtraSi() {
-        UNQShop tienda = new UNQShop();
+        Tienda tienda = new Tienda();
         Sucursal sucursalBernal = new Sucursal(tienda,"Roque Sáenz Peña 352");
         Sucursal sucursalQuilmes = new Sucursal(tienda,"Rivadavia 123");
 
@@ -355,7 +355,7 @@ public class ProductosTest {
 
     @Test
     void test029_PedidoLanzaExcepcionSiNingunaSucursalDeLaTiendaTieneElStockRequerido() {
-        UNQShop tienda = new UNQShop();
+        Tienda tienda = new Tienda();
         Sucursal sucursalBernal = new Sucursal(tienda,"Roque Sáenz Peña 352");
         Sucursal sucursalQuilmes = new Sucursal(tienda,"Rivadavia 123");
 
@@ -379,7 +379,7 @@ public class ProductosTest {
 
     @Test
     void test027_TiendaNoPermiteRegistrarSucursalesInpostorasDeOtrasCadenas() {
-        UNQShop otraTiendaCompetencia = new UNQShop();
+        Tienda otraTiendaCompetencia = new Tienda();
         Sucursal sucursalDeLaCompetencia = new Sucursal(otraTiendaCompetencia, "Calle Falsa 123");
 
         assertThrows(TiendaInvalidaException.class, () -> {

@@ -25,14 +25,14 @@ public class MetodosDeEnvioTest {
     MetodoDeEnvio envioEstandar;
     MetodoDeEnvio envioExpress;
     MetodoDeEnvio retiroEnSucursal;
-    UNQShop tienda;
+    Tienda tienda;
 
     @BeforeEach
     void setUp() {
         envioEstandar = new EnvioEstandar();
         envioExpress = new EnvioExpress();
         retiroEnSucursal = new RetiroEnSucursal();
-        tienda  = mock(UNQShop.class);
+        tienda  = mock(Tienda.class);
         Cliente cliente1 = mock(Cliente.class);
 
         pedido1 = mock(Pedido.class);
@@ -76,7 +76,7 @@ public class MetodosDeEnvioTest {
 
     @Test
     void test0004_retiroEnSucursalSinStock() {
-        UNQShop tiendaReal = new UNQShop();
+        Tienda tiendaReal = new Tienda();
         Sucursal sucursalBernal = new Sucursal(tiendaReal, "Roque Sáenz Peña 352");
         Sucursal sucursalQuilmes = new Sucursal(tiendaReal, "Rivadavia 123");
 

@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
-public class UNQShop {
+public class Tienda {
     private final List<Sucursal> sucursales = new ArrayList<>();
     private final Set<Producto> catalogoDeProductos = new HashSet<>();
 
@@ -20,10 +20,6 @@ public class UNQShop {
         this.sucursales.add(sucursal);
     }
 
-    /**
-     * Intenta procesar un pedido para una sucursal destino.
-     * Si no hay stock local, busca en las otras sucursales para realizar un traslado interno.
-     */
     public void procesarPedido(Pedido pedido, Sucursal sucursalDestino) {
         Map<Producto, Integer> productosDelPedido = pedido.getCarritoDeProductos(); // El mapa de productos y cantidades
 
@@ -35,7 +31,7 @@ public class UNQShop {
             if (sucursalDestino.tieneStock(producto, cantidadRequerida)) {
                 sucursalDestino.decrementarStock(Map.of(producto, cantidadRequerida));
             }
-            //  No hay stock local, buscamos en el resto de la empresa
+            //  No hay stock local, buscamos en el resto de la tienda
             else {
                 Optional<Sucursal> sucursalOrigen = buscarSucursalConStock(producto, cantidadRequerida, sucursalDestino);
 
@@ -55,13 +51,9 @@ public class UNQShop {
             }
         }
 
-        // Si todo salió bien y no saltó excepción, se guarda en el historial de la sucursal
         sucursalDestino.getHistorialPedidos().add(pedido);
     }
 
-    /**
-     * Busca qué OTRA sucursal tiene stock de un producto específico.
-     */
     private Optional<Sucursal> buscarSucursalConStock(Producto producto, int cantidad, Sucursal sucursalActual) {
         return sucursales.stream()
                 .filter(s -> !s.equals(sucursalActual)) // Excluimos la sucursal que ya sabemos que no tiene stock
@@ -72,6 +64,12 @@ public class UNQShop {
     public List<Producto> filtrar(CriterioDeBusqueda criterio) {
         return catalogoDeProductos.stream()
                 .filter(criterio::cumpleCondicion)
+                .collect(Collectors.toList());
+    }
+
+    public List<Pedido> historialdePedidosDeTodasLasSucursales() {
+        return this.sucursales.stream()
+                .flatMap(sucursal -> sucursal.getHistorialPedidos().stream())
                 .collect(Collectors.toList());
     }
 }
