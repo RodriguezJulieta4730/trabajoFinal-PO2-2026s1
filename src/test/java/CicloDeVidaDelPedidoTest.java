@@ -3,6 +3,7 @@ import Excepciones.*;
 import CicloDeVidaDelPedido.*;
 import MetodosDeEnvio.EnvioEstandar;
 import MetodosDeEnvio.MetodoDeEnvio;
+import NotificacionesDelPedido.NotificadorDeEmail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +29,7 @@ public class CicloDeVidaDelPedidoTest {
         envioEstandar = new EnvioEstandar();
         sucursal1 = new Sucursal(tienda,"Roque Sáenz Peña 352");
         tienda.registrarSucursal(sucursal1);
-        cliente1 = new Cliente("JulietaRodriguez", 20304050607L, "juli@email.com", "Boedo 671");
+        cliente1 = mock(Cliente.class);
         pedido1 = new Pedido(sucursal1, envioEstandar, cliente1);
         producto1 = mock(ProductoIndividual.class);
         producto2 = mock(ProductoIndividual.class);
@@ -418,5 +419,19 @@ public class CicloDeVidaDelPedidoTest {
         pedido1.cancelar();
 
         assertThrows(operacionInvalidaExeption.class, () -> pedido1.entregar());
+    }
+
+    @Test
+    void test0038_enPreparacionNotificarMailNoHaceNadaNiLanzaExcepcion() {
+        sucursal1.agregarStock(producto1, 4);
+        pedido1.agregarProducto(producto1, 2);
+        pedido1.confirmar();
+        pedido1.pagar();
+
+        assertDoesNotThrow(() -> {
+            pedido1.getEstadoActual().notificarMail(pedido1, mock(NotificadorDeEmail.class));
+        });
+
+        assertTrue(pedido1.getEstadoActual() instanceof EstadoPedidoEnPreparacion);
     }
 }

@@ -21,7 +21,7 @@ public class Tienda {
     }
 
     public void procesarPedido(Pedido pedido, Sucursal sucursalDestino) {
-        Map<Producto, Integer> productosDelPedido = pedido.getCarritoDeProductos(); // El mapa de productos y cantidades
+        Map<Producto, Integer> productosDelPedido = pedido.getCarritoDeProductos();
 
         for (Map.Entry<Producto, Integer> entry : productosDelPedido.entrySet()) {
             Producto producto = entry.getKey();
@@ -31,17 +31,16 @@ public class Tienda {
             if (sucursalDestino.tieneStock(producto, cantidadRequerida)) {
                 sucursalDestino.decrementarStock(Map.of(producto, cantidadRequerida));
             }
-            //  No hay stock local, buscamos en el resto de la tienda
+            //  No hay stock en la sucursal elegida, buscamos en el resto de la tienda
             else {
                 Optional<Sucursal> sucursalOrigen = buscarSucursalConStock(producto, cantidadRequerida, sucursalDestino);
 
                 if (sucursalOrigen.isPresent()) {
                     Sucursal origen = sucursalOrigen.get();
 
-                    // Hacemos el traslado interno:
-                    origen.decrementarStock(Map.of(producto, cantidadRequerida));      // Sale de la sucursal que presta
-                    sucursalDestino.agregarStock(producto, cantidadRequerida);         // Entra temporalmente a la destino
-                    sucursalDestino.decrementarStock(Map.of(producto, cantidadRequerida)); // Se consume para el pedido
+                    origen.decrementarStock(Map.of(producto, cantidadRequerida));
+                    sucursalDestino.agregarStock(producto, cantidadRequerida);
+                    sucursalDestino.decrementarStock(Map.of(producto, cantidadRequerida));
 
                     System.out.println("Traslado interno exitoso de " + producto.getNombre() + " desde " + origen.getDireccion());
                 } else {
@@ -56,9 +55,9 @@ public class Tienda {
 
     private Optional<Sucursal> buscarSucursalConStock(Producto producto, int cantidad, Sucursal sucursalActual) {
         return sucursales.stream()
-                .filter(s -> !s.equals(sucursalActual)) // Excluimos la sucursal que ya sabemos que no tiene stock
+                .filter(s -> !s.equals(sucursalActual))
                 .filter(s -> s.tieneStock(producto, cantidad))
-                .findFirst(); // Retorna la primera que cumpla
+                .findFirst(); 
     }
 
     public List<Producto> filtrar(CriterioDeBusqueda criterio) {
